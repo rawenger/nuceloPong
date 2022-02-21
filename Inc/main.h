@@ -8,6 +8,8 @@
 #include "i2c.h"
 #include "sysclock.h"
 
+#include "nunchuk.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -16,6 +18,8 @@ extern "C" {
 #define BTN_GPIO_PIN 13
 #define LED_GPIO GPIOA
 #define LED_GPIO_PIN 5
+
+#define NUNCHUK_I2C I2C1
 
 #ifdef __cplusplus
 }

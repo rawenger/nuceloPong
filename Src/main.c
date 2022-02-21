@@ -16,20 +16,25 @@ static void peripheral_init() {
     I2C_Init();
 }
 
+static void device_init() {
+    Init_nunchuk(NUNCHUK_I2C);
+}
 
 int main(void) {
     peripheral_init();
-    printf("Initialized\r\n");
+    printf("\r\nInitialized peripherals\r\n");
+    // wait for button press before proceeding
+    while (GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) ;
+    device_init();
+    printf("Initialize devices\r\n");
     GPIO_TogglePin(LED_GPIO, LED_GPIO_PIN);
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
     while (1) {
-        if (!GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) {
-            GPIO_TogglePin(LED_GPIO, LED_GPIO_PIN);
-            printf("Toggled LED %s\r\n", GPIO_ReadPin(LED_GPIO, LED_GPIO_PIN) ? "on" : "off");
-            for (volatile int a = 0; a < 0x100000; a++);
-        }
+        Nunchuk_updateValues();
+        fflush(NULL);
+        printf("joystick: <%d, %d>\r\n", Nunchuk_readJoystickX(), Nunchuk_readJoystickY());
     }
 #pragma clang diagnostic pop
 
