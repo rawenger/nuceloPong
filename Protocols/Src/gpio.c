@@ -8,12 +8,17 @@ static void I2C_GPIO_Init(void);
 static void UART2_GPIO_Init(void);
 static void GreenLED_Init(void);
 static void BluePushbutton_Init(void);
+static void USB_GPIO_Init(void);
 
 void GPIO_Init() {
     GreenLED_Init();
     BluePushbutton_Init();
     UART2_GPIO_Init();
     I2C_GPIO_Init();
+    USB_GPIO_Init();
+
+    // enable port H clock (crystal oscillators are here and it's supposedly useful)
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOHEN;
 }
 
 uint8_t GPIO_ReadPin(GPIO_TypeDef *gpio_port, uint8_t pin_no) {
@@ -52,6 +57,23 @@ static void BluePushbutton_Init(void) {
 
     GPIOC->MODER &= ~GPIO_MODER_MODE13; // Set mode of PC13 to Input
     GPIOC->PUPDR &= ~GPIO_PUPDR_PUPD13; // Set PC13 to no pull-up and no pull-down
+}
+
+//initialize PA12 AF10 (USB D+), PA11 AF10 (USB D-), and later (once I get a voltage regulator) PA9 input (USB VBUS)
+static void USB_GPIO_Init(void) {
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+
+    GPIOA->MODER &= ~(GPIO_MODER_MODE11 | GPIO_MODER_MODE12);
+    GPIOA->MODER |= (GPIO_MODER_MODE11_1 | GPIO_MODER_MODE12_1);
+    GPIOA->AFR[1] &= ~(GPIO_AFRH_AFSEL11 | GPIO_AFRH_AFSEL12);
+    GPIOA->AFR[1] |= (GPIO_AFRH_AFSEL11_3 | GPIO_AFRH_AFSEL11_1 |
+            GPIO_AFRH_AFSEL12_3 | GPIO_AFRH_AFSEL12_1);
+
+    // configure PA11 and PA12 to no PUPD
+    GPIOA->PUPDR &= ~(GPIO_PUPDR_PUPD11 | GPIO_PUPDR_PUPD12);
+
+    // configure very high output speed
+    GPIOA->OSPEEDR |= (GPIO_OSPEEDR_OSPEED11 | GPIO_OSPEEDR_OSPEED12);
 }
 
 // configure PB8 (D15) and PB9 (D14) to communicate over I2C 1
