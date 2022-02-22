@@ -16,11 +16,15 @@ void System_Clock_Init(void) {
     // must be correctly programmed according to the frequency of the CPU clock
     // (HCLK) and the supply voltage of the device.
     FLASH->ACR &= ~FLASH_ACR_LATENCY;
-    FLASH->ACR |=  FLASH_ACR_LATENCY_2WS;
+    FLASH->ACR |= FLASH_ACR_LATENCY_2WS;
 
-    // Enable the Internal High Speed oscillator (HSI
-    RCC->CR |= RCC_CR_HSION;
-    while((RCC->CR & RCC_CR_HSIRDY) == 0);
+    // make sure MSI range is default (range 6) 4 MHz
+    RCC->CR &= ~RCC_CR_MSIRANGE;
+    RCC->CR |= RCC_CR_MSIRANGE_6;
+    // Enable MSI
+    RCC->CR |= RCC_CR_MSION;
+    while ((RCC->CR & RCC_CR_MSIRDY) == 0);
+
     // Adjusts the Internal High Speed oscillator (HSI) calibration value
     // RC oscillator frequencies are factory calibrated by ST for 1 % accuracy at 25oC
     // After reset, the factory calibration value is loaded in HSICAL[7:0] of RCC_ICSCR
@@ -28,24 +32,31 @@ void System_Clock_Init(void) {
     RCC->ICSCR &= ~RCC_ICSCR_HSITRIM;
     RCC->ICSCR |= HSITrim << 24;
 
-    RCC->CR    &= ~RCC_CR_PLLON;
-    while((RCC->CR & RCC_CR_PLLRDY) == RCC_CR_PLLRDY);
+    // also calibrate MSI
+    RCC->ICSCR &= ~RCC_ICSCR_MSICAL;
+    RCC->ICSCR |= RCC_ICSCR_MSICAL_0;
+
+
+    RCC->CR &= ~RCC_CR_PLLON;
+    while ((RCC->CR & RCC_CR_PLLRDY) == RCC_CR_PLLRDY);
 
     // Select clock source to PLL
     RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLSRC;
-    RCC->PLLCFGR |= RCC_PLLCFGR_PLLSRC_HSI; // 00 = No clock, 01 = MSI, 10 = HSI, 11 = HSE
+    RCC->PLLCFGR |= RCC_PLLCFGR_PLLSRC_MSI; // 00 = No clock, 01 = MSI, 10 = HSI, 11 = HSE
 
     // Make PLL as 80 MHz
     // f(VCO clock) = f(PLL clock input) * (PLLN / PLLM) = 16MHz * 20/2 = 160 MHz
     // f(PLL_R) = f(VCO clock) / PLLR = 160MHz/2 = 80MHz
-    RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLLN) | 20U << 8;
-    RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLLM) | 1U << 4; // 000: PLLM = 1, 001: PLLM = 2, 010: PLLM = 3, 011: PLLM = 4, 100: PLLM = 5, 101: PLLM = 6, 110: PLLM = 7, 111: PLLM = 8
+    RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLN;
+    RCC->PLLCFGR |= (0b0101000U << RCC_PLLCFGR_PLLN_Pos);
+    RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLM;
+//            << 4; // 000: PLLM = 1, 001: PLLM = 2, 010: PLLM = 3, 011: PLLM = 4, 100: PLLM = 5, 101: PLLM = 6, 110: PLLM = 7, 111: PLLM = 8
 
     RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLR;  // 00: PLLR = 2, 01: PLLR = 4, 10: PLLR = 6, 11: PLLR = 8
     RCC->PLLCFGR |= RCC_PLLCFGR_PLLREN; // Enable Main PLL PLLCLK output
 
-    RCC->CR   |= RCC_CR_PLLON;
-    while((RCC->CR & RCC_CR_PLLRDY) == 0);
+    RCC->CR |= RCC_CR_PLLON;
+    while ((RCC->CR & RCC_CR_PLLRDY) == 0);
 
     // Select PLL selected as system clock
     RCC->CFGR &= ~RCC_CFGR_SW;
@@ -64,10 +75,11 @@ void System_Clock_Init(void) {
     // RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLP;
     // RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLQ;
     // RCC->PLLCFGR |= RCC_PLLCFGR_PLLPEN; // Enable Main PLL PLLSAI3CLK output enable
-    // RCC->PLLCFGR |= RCC_PLLCFGR_PLLQEN; // Enable Main PLL PLL48M1CLK output enable
+//    RCC->PLLCFGR |= RCC_PLLCFGR_PLLQEN; // Enable Main PLL PLL48M1CLK output enable
+//    while (!(RCC->PLLCFGR & RCC_PLLCFGR_PLLQEN));
 
     RCC->CR &= ~RCC_CR_PLLSAI1ON;  // SAI1 PLL enable
-    while ( (RCC->CR & RCC_CR_PLLSAI1ON) == RCC_CR_PLLSAI1ON );
+    while ((RCC->CR & RCC_CR_PLLSAI1ON) == RCC_CR_PLLSAI1ON);
 
     // Configure and enable PLLSAI1 clock to generate 11.294MHz
     // 8 MHz * 24 / 17 = 11.294MHz
@@ -76,17 +88,21 @@ void System_Clock_Init(void) {
     // PLLUSB2CLK: f(PLLSAI1_Q) = f(VCOSAI1 clock) / PLLSAI1Q
     // PLLADC1CLK: f(PLLSAI1_R) = f(VCOSAI1 clock) / PLLSAI1R
     RCC->PLLSAI1CFGR &= ~RCC_PLLSAI1CFGR_PLLSAI1N;
-    RCC->PLLSAI1CFGR |= 24U<<8;
+    RCC->PLLSAI1CFGR |= 24U << 8;
 
     // SAI1PLL division factor for PLLSAI1CLK
     // 0: PLLSAI1P = 7, 1: PLLSAI1P = 17
-    RCC->PLLSAI1CFGR |= RCC_PLLSAI1CFGR_PLLSAI1P;
-    RCC->PLLSAI1CFGR |= RCC_PLLSAI1CFGR_PLLSAI1PEN;
+    RCC->PLLSAI1CFGR &= ~RCC_PLLSAI1CFGR_PLLSAI1P;
+//    RCC->PLLSAI1CFGR |= RCC_PLLSAI1CFGR_PLLSAI1PEN;
 
     // SAI1PLL division factor for PLL48M2CLK (48 MHz clock)
-    // RCC->PLLSAI1CFGR &= ~RCC_PLLSAI1CFGR_PLLSAI1Q;
-    // RCC->PLLSAI1CFGR |= U<<21;
-    // RCC->PLLSAI1CFGR |= RCC_PLLSAI1CFGR_PLLSAI1QEN;
+    // 00: 2
+    // 01: 4
+    // 10: 6
+    // 11: 8
+    RCC->PLLSAI1CFGR &= ~RCC_PLLSAI1CFGR_PLLSAI1Q;
+//     RCC->PLLSAI1CFGR |= U<<21;
+    RCC->PLLSAI1CFGR |= RCC_PLLSAI1CFGR_PLLSAI1QEN;
 
     // PLLSAI1 division factor for PLLADC1CLK (ADC clock)
     // 00: PLLSAI1R = 2, 01: PLLSAI1R = 4, 10: PLLSAI1R = 6, 11: PLLSAI1R = 8
@@ -95,7 +111,7 @@ void System_Clock_Init(void) {
     // RCC->PLLSAI1CFGR |= RCC_PLLSAI1CFGR_PLLSAI1REN;
 
     RCC->CR |= RCC_CR_PLLSAI1ON;  // SAI1 PLL enable
-    while ( (RCC->CR & RCC_CR_PLLSAI1ON) == 0);
+    while ((RCC->CR & RCC_CR_PLLSAI1ON) == 0);
 
     // SAI1 clock source selection
     // 00: PLLSAI1 "P" clock (PLLSAI1CLK) selected as SAI1 clock
@@ -104,5 +120,14 @@ void System_Clock_Init(void) {
     // 11: External input SAI1_EXTCLK selected as SAI1 clock
     RCC->CCIPR &= ~RCC_CCIPR_SAI1SEL;
 
-    RCC->APB2ENR |= RCC_APB2ENR_SAI1EN;
+    // CLK48 clock source selection
+    // 00: No clock selected
+    // 01: PLLSAI1 “Q” clock (PLL48M2CLK) selected as 48 MHz clock
+    // 10: PLL “Q” clock (PLL48M1CLK) selected as 48 MHz clock
+    // 11: MSI clock selected as 48 MHz clock
+    RCC->CCIPR &= ~RCC_CCIPR_CLK48SEL;
+    RCC->CCIPR |= RCC_CCIPR_CLK48SEL_0;
+
+//    RCC->APB2ENR |= RCC_APB2ENR_SAI1EN;
+    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 }

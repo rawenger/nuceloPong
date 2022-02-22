@@ -7,6 +7,7 @@
 #include "gpio.h"
 #include "i2c.h"
 #include "sysclock.h"
+#include "usb.h"
 
 #include "nunchuk.h"
 
