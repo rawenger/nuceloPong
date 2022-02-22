@@ -14,22 +14,24 @@ extern "C" {
 
 #define USB_DEV_DESC_SIZE                               sizeof(USBDevice_Desc_TypeDef)
 #define USB_DEV_DESC_TYPE                               0x06U
-#define  USB_DESC_TYPE_DEVICE                           0x01U
+#define USB_DESC_TYPE_DEVICE                            0x01U   // bDescriptorType
+
+#define USB_DESC_TYPE_DEVICE_QUALIFIER                  0x06U   // bDescriptorType
 
 #define HID_DESC_TYPE                                   0x21U
 
-#define HID_MOUSE_REPORT_DESC_SIZE                      74U
+#define HID_MOUSE_REPORT_DESC_SIZE                      74U     // HID report descriptor size
 
-#define USB_MAX_EP0_SIZE                                64U
+#define USB_MAX_EP0_SIZE                                64U     // bMaxPacketSize
 
-// stuff I can't use my own of
-#define USBDEV_VID                                      1155 // STMicroelectronics
+/* stuff I can't use my own of */
+#define USBDEV_VID                                      1155    // STMicroelectronics
 #define USBDEV_PID_FS                                   22315
 
-#define USBDEV_IDX_MFC_STR                              0x01U
-#define USBDEV_IDX_PRODUCT_STR                          0x02U
-#define USBDEV_IDX_SERIAL_STR                           0x03U
-#define USBDEV_MAX_NUM_CONFIGURATION                    1U
+#define USBDEV_IDX_MFC_STR                              0x01U   // Index of manufacturer string
+#define USBDEV_IDX_PRODUCT_STR                          0x02U   // Index of product string
+#define USBDEV_IDX_SERIAL_STR                           0x03U   // Index of serial number string
+#define USBDEV_MAX_NUM_CONFIGURATION                    1U      // bNumConfigurations
 
 
 
@@ -62,6 +64,20 @@ typedef struct __attribute__((aligned(4))) {
     uint8_t bmAttributes;
     int8_t MaxPower;
 } USBConfig_Desc_TypeDef;
+
+
+// USB HID Device Qualifier Descriptor
+typedef struct __attribute__((aligned(4))) {
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint16_t bcdUSB;
+    uint8_t bDeviceClass;
+    uint8_t bDeviceSubClass;
+    uint8_t bDeviceProtocol;
+    uint8_t bMaxPacketSize0;
+    uint8_t bNumConfigurations;
+    uint8_t bReserved;
+} HIDMouse_DeviceQualifierDesc_TypeDef;
 
 // HID 1.11 page 70
 typedef struct __attribute__((aligned(4))) {

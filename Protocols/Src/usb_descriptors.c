@@ -7,35 +7,48 @@
 
 USBDevice_Desc_TypeDef Device_Desc =
         {
-                0x12,                       /*bLength */
-                USB_DESC_TYPE_DEVICE,       /*bDescriptorType*/
-                0x0002,                       /*bcdUSB */
-                0x00,                       /*bDeviceClass*/
-                0x00,                       /*bDeviceSubClass*/
-                0x00,                       /*bDeviceProtocol*/
-                USB_MAX_EP0_SIZE,           /*bMaxPacketSize*/
-                USBDEV_VID,                   /*idVendor*/
-                USBDEV_PID_FS,        /*idProduct*/
-                0x0002,                       /*bcdDevice rel. 2.00*/
-                USBDEV_IDX_MFC_STR,           /*Index of manufacturer  string*/
-                USBDEV_IDX_PRODUCT_STR,       /*Index of product string*/
-                USBDEV_IDX_SERIAL_STR,        /*Index of serial number string*/
-                USBDEV_MAX_NUM_CONFIGURATION  /*bNumConfigurations*/
+                0x12,
+                USB_DESC_TYPE_DEVICE,
+                0x0002,
+                0x00,
+                0x00,
+                0x00,
+                USB_MAX_EP0_SIZE,
+                USBDEV_VID,
+                USBDEV_PID_FS,
+                0x0002,
+                USBDEV_IDX_MFC_STR,
+                USBDEV_IDX_PRODUCT_STR,
+                USBDEV_IDX_SERIAL_STR,
+                USBDEV_MAX_NUM_CONFIGURATION
         };
 
-HIDMouse_HIDDesc_TypeDef MouseHID_Desc =
+HIDMouse_DeviceQualifierDesc_TypeDef MouseHID_DevQualifier_Desc =
         {
-                0x09,                                               /* bLength: HID Descriptor size */
-                HID_DESC_TYPE,                                /* bDescriptorType: HID */
-                0x1101,                                               /* bcdHID: HID Class Spec release number */
-                0x00,                                               /* bCountryCode: Hardware target country */
-                0x01,                                               /* bNumDescriptors: Number of HID class descriptors to follow */
-                0x22,                                               /* bDescriptorType */
-                HID_MOUSE_REPORT_DESC_SIZE,                         /* wItemLength: Total length of Report descriptor */
+                sizeof(HIDMouse_DeviceQualifierDesc_TypeDef),
+                USB_DESC_TYPE_DEVICE_QUALIFIER,
+                0x0002,
+                0x00,
+                0x00,
+                0x00,
+                0x40,
+                0x01,
+                0x00,
+        };
+
+HIDMouse_HIDDesc_TypeDef MouseHID_HIDDesc =
+        {
+                0x09,
+                HID_DESC_TYPE,
+                0x1101,
+                0x00,
+                0x01,
+                0x22,
+                HID_MOUSE_REPORT_DESC_SIZE,
         };
 
 
-static uint8_t HID_MOUSE_ReportDesc[HID_MOUSE_REPORT_DESC_SIZE]  __attribute__((aligned(4))) =
+static uint8_t MouseHID_ReportDesc[HID_MOUSE_REPORT_DESC_SIZE]  __attribute__((aligned(4))) =
         {
                 0x05,   0x01,
                 0x09,   0x02,
