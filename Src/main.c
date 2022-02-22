@@ -29,7 +29,7 @@ int main(void) {
     // wait for button press before proceeding
     while (GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) ;
     device_init();
-    printf("Initialize devices\r\n");
+    printf("Initialized devices\r\n");
     GPIO_TogglePin(LED_GPIO, LED_GPIO_PIN);
 
 #pragma clang diagnostic push
