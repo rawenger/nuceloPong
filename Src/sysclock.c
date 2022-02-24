@@ -5,10 +5,12 @@
 
 #include "sysclock.h"
 
+
+
 //******************************************************************************************
 // Switch the PLL source from MSI to HSI, and select the PLL as SYSCLK source.
 //******************************************************************************************
-void System_Clock_Init(void) {
+void SystemClock_Init(void) {
 
     uint32_t HSITrim;
 
@@ -51,6 +53,8 @@ void System_Clock_Init(void) {
     RCC->PLLCFGR |= (0b0101000U << RCC_PLLCFGR_PLLN_Pos);
     RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLM;
 //            << 4; // 000: PLLM = 1, 001: PLLM = 2, 010: PLLM = 3, 011: PLLM = 4, 100: PLLM = 5, 101: PLLM = 6, 110: PLLM = 7, 111: PLLM = 8
+
+    SystemCoreClock = 80000000; // some HAL API functions depend on this value
 
     RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLR;  // 00: PLLR = 2, 01: PLLR = 4, 10: PLLR = 6, 11: PLLR = 8
     RCC->PLLCFGR |= RCC_PLLCFGR_PLLREN; // Enable Main PLL PLLCLK output

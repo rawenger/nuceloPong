@@ -72,6 +72,9 @@ static void USB_GPIO_Init(void) {
     // configure PA11 and PA12 to no PUPD
     GPIOA->PUPDR &= ~(GPIO_PUPDR_PUPD11 | GPIO_PUPDR_PUPD12);
 
+    // configure output push-pull
+    GPIOA->OTYPER &= ~(GPIO_OTYPER_OT11 | GPIO_OTYPER_OT12);
+
     // configure very high output speed
     GPIOA->OSPEEDR |= (GPIO_OSPEEDR_OSPEED11 | GPIO_OSPEEDR_OSPEED12);
 }

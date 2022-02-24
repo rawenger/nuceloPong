@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-void System_Clock_Init(void);
+void SystemClock_Init(void);
 
 #ifdef __cplusplus
 }

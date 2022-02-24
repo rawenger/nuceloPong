@@ -11,9 +11,14 @@
 extern "C" {
 #endif
 
-#define __CONCAT(_x, _y)    _x##_y
-#define CONCAT(_x, _y)     __CONCAT(_x,_y)
+//#define __CONCAT(_x, _y)            _x##_y
+//#define CONCAT(_x, _y)              __CONCAT(_x,_y)
 
+#define SET_BIT_WAIT(_reg, _mask)    { _reg |= _mask; \
+                                        while ((_reg & _mask) != _mask) ; }
+
+#define CLR_BIT_WAIT(_reg, _mask)    { _reg &= ~_mask; \
+                                        while ((_reg & _mask) == _mask) ; }
 #ifdef __cplusplus
 }
 #endif
