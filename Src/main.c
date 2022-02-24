@@ -19,7 +19,6 @@
 
 extern USBD_HandleTypeDef hUsbDeviceFS;
 
-
 typedef union {
     struct {
         int8_t buttons;
@@ -34,6 +33,7 @@ typedef union {
 static void peripheral_init() {
     SystemClock_Init();
     HAL_Init(); // basically just initializes SysTick clock
+
     GPIO_Init();
     USART_Init();
     I2C_Init();
@@ -45,8 +45,6 @@ static void device_init() {
 }
 
 int main(void) {
-//    volatile RCC_TypeDef *rcc = RCC;
-//    volatile USB_OTG_GlobalTypeDef *usb = USB_OTG_FS;
     peripheral_init();
     printf("\r\nInitialized peripherals\r\n");
     // wait for button press before proceeding
