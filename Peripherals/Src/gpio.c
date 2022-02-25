@@ -3,12 +3,14 @@
  * This file is provided AS-IS with no warranty.
  */
 #include "gpio.h"
+#include "util.h"
 
 static void I2C_GPIO_Init(void);
 static void UART2_GPIO_Init(void);
 static void GreenLED_Init(void);
 static void BluePushbutton_Init(void);
 static void USB_GPIO_Init(void);
+static void LCD_GPIO_Init(void);
 
 void GPIO_Init() {
     GreenLED_Init();
@@ -16,6 +18,7 @@ void GPIO_Init() {
     UART2_GPIO_Init();
     I2C_GPIO_Init();
     USB_GPIO_Init();
+    LCD_GPIO_Init();
 
     // enable port H clock (crystal oscillators are here and it's supposedly useful)
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOHEN;
@@ -125,4 +128,29 @@ static void UART2_GPIO_Init(void) {
     // set both pins' output speed to "very high"
     GPIOA->OSPEEDR |= (GPIO_OSPEEDR_OSPEED2 | GPIO_OSPEEDR_OSPEED3);
 
+}
+
+
+// configure
+static void LCD_GPIO_Init(void) {
+    RCC->AHB2ENR |= (RCC_AHB2ENR_GPIOAEN | RCC_AHB2ENR_GPIOBEN | RCC_AHB2ENR_GPIOCEN);
+
+    // configure AF5 for MOSI and SCK pins
+    GPIOA->AFR[0] &= ~(GPIO_AFRL_AFRL5 | GPIO_AFRL_AFRL7);
+    GPIOA->AFR[0] |= (GPIO_AFRL_AFSEL5_2 | GPIO_AFRL_AFSEL7_2);
+    GPIOA->AFR[0] |= (GPIO_AFRL_AFSEL5_0 | GPIO_AFRL_AFSEL7_0);
+
+    // set no PUPD
+    GPIOA->PUPDR &= ~(GPIO_PUPDR_PUPD5 | GPIO_PUPDR_PUPD7);
+
+    // set output type to push-pull
+    LCD_DC_GPIO->OTYPER &= ~GPIO_OTYPER_OT7;
+    LCD_CS_GPIO->OTYPER &= ~GPIO_OTYPER_OT6;
+    LCD_MOSI_GPIO->OTYPER &= ~GPIO_OTYPER_OT7;
+    LCD_SCK_GPIO->OTYPER &= ~GPIO_OTYPER_OT5;
+
+    // set very high output speed
+    GPIOA->OSPEEDR |= (GPIO_OSPEEDR_OSPEED5 | GPIO_OSPEEDR_OSPEED7);
+    GPIOB->OSPEEDR |= GPIO_OSPEEDR_OSPEED6;
+    GPIOC->OSPEEDR |= GPIO_OSPEEDR_OSPEED7;
 }
