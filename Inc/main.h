@@ -9,10 +9,10 @@
 extern "C" {
 #endif
 
-#define BTN_GPIO GPIOC
-#define BTN_GPIO_PIN 13
-#define LED_GPIO GPIOA
-#define LED_GPIO_PIN 5
+#define BTN_GPIO                        GPIOC
+#define BTN_GPIO_PIN                    13
+#define LED_GPIO                        GPIOA
+#define LED_GPIO_PIN                    5
 
 #define NUNCHUK_I2C I2C1
 

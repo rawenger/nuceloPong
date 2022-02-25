@@ -68,7 +68,6 @@ int main(void) {
         USBD_HID_SendReport(&hUsbDeviceFS, m.buf, 5);
 
 //        for(volatile int a = 0; a < 0x1000; a++); // later add a delay function using SysTick;
-//        HAL_Delay(1000);
     }
 #pragma clang diagnostic pop
 
