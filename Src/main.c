@@ -13,6 +13,7 @@
 #include "sysclock.h"
 #include "usbd_hid.h"
 #include "usb_device.h"
+#include "systick.h"
 
 #include "nunchuk.h"
 #include <stdio.h>
@@ -32,7 +33,7 @@ typedef union {
 
 static void peripheral_init() {
     SystemClock_Init();
-    HAL_Init(); // basically just initializes SysTick clock
+    SysTick_Init(); // basically just initializes SysTick clock
 
     GPIO_Init();
     USART_Init();

@@ -63,7 +63,7 @@
 /*#define HAL_OPAMP_MODULE_ENABLED   */
 /*#define HAL_OSPI_MODULE_ENABLED   */
 /*#define HAL_OSPI_MODULE_ENABLED   */
-#define HAL_PCD_MODULE_ENABLED
+#define HAL_PCD_MODULE_ENABLED      // Low-level USB stuff
 /*#define HAL_PKA_MODULE_ENABLED   */
 /*#define HAL_QSPI_MODULE_ENABLED   */
 /*#define HAL_QSPI_MODULE_ENABLED   */
@@ -83,13 +83,13 @@
 /*#define HAL_WWDG_MODULE_ENABLED   */
 /*#define HAL_EXTI_MODULE_ENABLED   */
 /*#define HAL_PSSI_MODULE_ENABLED   */
-#define HAL_GPIO_MODULE_ENABLED
-#define HAL_EXTI_MODULE_ENABLED
-#define HAL_I2C_MODULE_ENABLED
-#define HAL_DMA_MODULE_ENABLED
-#define HAL_RCC_MODULE_ENABLED
-#define HAL_FLASH_MODULE_ENABLED
-#define HAL_PWR_MODULE_ENABLED
+/*#define HAL_GPIO_MODULE_ENABLED*/
+/*#define HAL_EXTI_MODULE_ENABLED*/
+/*#define HAL_I2C_MODULE_ENABLED*/
+/*#define HAL_DMA_MODULE_ENABLED*/
+/*#define HAL_RCC_MODULE_ENABLED*/
+/*#define HAL_FLASH_MODULE_ENABLED*/
+/*#define HAL_PWR_MODULE_ENABLED*/
 #define HAL_CORTEX_MODULE_ENABLED
 
 /* ########################## Oscillator Values adaptation ####################*/

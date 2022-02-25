@@ -64,6 +64,7 @@ typedef enum
 /** @defgroup HAL_Exported_Constants HAL Exported Constants
   * @{
   */
+#define SYSCLOCK_FREQ                   80000000U // 80 MHz
 
 /** @defgroup SYSCFG_Exported_Constants SYSCFG Exported Constants
   * @{

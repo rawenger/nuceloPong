@@ -16,6 +16,8 @@ extern "C" {
 
 #define NUNCHUK_I2C I2C1
 
+#define SYSCLOCK_FREQ                   80000000U // 80 MHz
+
 void Error_Handler(void);
 
 //void SystemClock_Config();
