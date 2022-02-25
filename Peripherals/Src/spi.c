@@ -57,7 +57,8 @@ void SPI_Init(void){
 
     // (p) Disable NSS pulse generation.
     // maybe need to enable tho
-    SPI2->CR2 &= ~SPI_CR2_NSSP;
+//    SPI2->CR2 &= ~SPI_CR2_NSSP;
+    SPI2->CR2 |= SPI_CR2_NSSP;
 
     // (q) Set the FIFO threshold to 1/4 (required for 8-bit mode).
     SPI2->CR2 |= SPI_CR2_FRXTH;
@@ -66,23 +67,12 @@ void SPI_Init(void){
     SPI2->CR1 |= SPI_CR1_SPE;
 }
 
-// TODO implement multibyte transfer
-void SPI_Transfer_Byte(SPI_TypeDef *SPIx, uint8_t write_data) {
+void SPI_Send_Data(SPI_TypeDef *SPIx, uint8_t write_data) {
     // (a) Wait for the Transmit Buffer Empty flag to become set.
     while (!(SPIx->SR & SPI_SR_TXE)) ;
 
-    // (b) Write data to the SPIx->DR register to begin transmission. Note that the register memory address
-    // must be cast to (volatile uint8 t*) and dereferenced when using the 8-bit format.
-    volatile uint8_t *dr = (uint8_t *) &(SPIx->DR);
-    *dr = write_data;
+    SPIx->DR = write_data;
 
     // (c) Wait for the Busy to become unset for the transmission to complete.
     while (SPIx->SR & SPI_SR_BSY) ;
-
-    // (d) Wait for the Receive Not Empty flag to set for the data to be received.
-//    while (!(SPIx->SR & SPI_SR_RXNE)) ;
-
-    // (e) Read received data from the SPIx->DR register. Again note that the register memory address must be
-    // cast to (volatile uint8 t*) and dereferenced when using the 8-bit format.
-//    *read_data = *dr;
 }

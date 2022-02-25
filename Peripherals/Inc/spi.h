@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 void SPI_Init(void);
-void SPI_Transfer_Byte(SPI_TypeDef *SPIx, uint8_t write_data);
+void SPI_Send_Data(SPI_TypeDef *SPIx, uint8_t write_data);
 
 
 #ifdef __cplusplus
