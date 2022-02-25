@@ -1,3 +1,4 @@
+#include <sys/cdefs.h>
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -39,7 +40,8 @@
 /* USER CODE END PV */
 
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
-void Error_Handler(void);
+
+_Noreturn void Error_Handler(void);
 
 /* USER CODE BEGIN 0 */
 

@@ -1,3 +1,4 @@
+#include <sys/cdefs.h>
 /*
  * Copyright (c) 2022 Ryan Wenger.
  * This file is provided AS-IS with no warranty.
@@ -5,7 +6,7 @@
 
 #include "i2c.h"
 
-extern void Error_Handler(void);
+_Noreturn extern void Error_Handler(void);
 
 // Inter-integrated Circuit Interface (I2C)
 // up to 100 Kbit/s in the standard mode,
