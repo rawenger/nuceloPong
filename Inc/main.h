@@ -3,13 +3,7 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
-#include "usart.h"
-#include "gpio.h"
-#include "i2c.h"
-#include "sysclock.h"
-#include "usb.h"
-
-#include "nunchuk.h"
+#include "stm32l4xx_hal.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,6 +15,12 @@ extern "C" {
 #define LED_GPIO_PIN 5
 
 #define NUNCHUK_I2C I2C1
+
+#define SYSCLOCK_FREQ                   80000000U // 80 MHz
+
+void Error_Handler(void);
+
+//void SystemClock_Config();
 
 #ifdef __cplusplus
 }
