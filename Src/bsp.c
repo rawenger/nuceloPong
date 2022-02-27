@@ -7,6 +7,9 @@
 #include "qpn_port.h"
 #include "statemachine.h"
 
+
+
+
 void QF_onStartup(void) { /* entered with interrupts locked */
 }
 
@@ -23,4 +26,8 @@ void Q_onAssert(char const Q_ROM *const Q_ROM_VAR file, int line) {
     QF_INT_LOCK();
     for (;;) {
     }
+}
+
+void show_welcome_screen() {
+
 }

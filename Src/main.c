@@ -10,12 +10,8 @@
 #include "main.h"
 #include "bsp.h"
 
-#include "nunchuk.h"
-
 #include "qpn_port.h"
 #include "statemachine.h"
-
-extern USBD_HandleTypeDef hUsbDeviceFS;
 
 static QEvent l_ChromaticTunerQueue[30];
 
@@ -27,16 +23,7 @@ QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
 Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
 
 
-typedef union {
-    struct {
-        int8_t buttons;
-        int8_t x;
-        int8_t y;
-        int8_t wheel;
-        int8_t wakeup;
-    } params;
-    uint8_t buf[5];
-} mouse;
+
 
 static void peripheral_init() {
     SystemClock_Init();
@@ -69,21 +56,9 @@ static void device_init() {
     LCD_setXY(20, 200, 40, 220);
     LCD_fastFill();
 
-    SysTick_Delay(3000);
+    SysTick_Delay(1000);
 
     LCD_clrScr();
-}
-
-
-static mouse m = { .params = {.buttons = 0, .x = 0, .y = 0, .wheel = 0, .wakeup = 0 } };
-
-void move_mouse() {
-//        fflush(NULL);
-    m.params.x = (int8_t) Nunchuk_readJoystickX();
-    m.params.y = (int8_t) (-1 * Nunchuk_readJoystickY()); // mouse inverts y-axis
-    m.params.buttons = (int8_t) (Nunchuk_readCButton() + (Nunchuk_readZButton() << 1));
-//        printf("joystick: <%d, %d>\r\n", m.params.x, -1 * m.params.y);
-    USBD_HID_SendReport(&hUsbDeviceFS, m.buf, 5);
 }
 
 int main(void) {
@@ -95,8 +70,6 @@ int main(void) {
     printf("Initialize devices\r\n");
     device_init();
     GPIO_SetPin(LED_GPIO, LED_GPIO_PIN);
-
-    USBD_HID_SendReport(&hUsbDeviceFS, m.buf, 5);
 
     QF_run();
 

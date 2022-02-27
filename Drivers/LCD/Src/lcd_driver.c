@@ -53,9 +53,9 @@ void LCD_Init(void) {
     GPIO_SetPin(LCD_CS_GPIO, LCD_CS_PIN);
     // reset
     GPIO_ClearPin(LCD_RST_GPIO, LCD_RST_PIN);
-    SysTick_Delay(10/*200*/);
+    SysTick_Delay(200/*200*/);
     GPIO_ClearPin(LCD_CS_GPIO, LCD_CS_PIN);	//CS OFF
-    SysTick_Delay(10/*200*/);
+    SysTick_Delay(200/*200*/);
     GPIO_SetPin(LCD_RST_GPIO, LCD_RST_PIN);
 
 //    GPIO_SetPin(LCD_CS_GPIO, LCD_CS_PIN);
@@ -63,7 +63,7 @@ void LCD_Init(void) {
 
     // Reset
     LCD_Write_COM(0x01);
-    SysTick_Delay(20); //Must wait > 5ms
+    SysTick_Delay(200); //Must wait > 5ms
 
     LCD_Write_COM(0xCB);
     LCD_Write_DATA(0x39);
@@ -165,7 +165,7 @@ void LCD_Init(void) {
     LCD_Write_DATA(0x0F);
 
     LCD_Write_COM(0x11);   //Exit Sleep
-    SysTick_Delay(11/*120*/); // wait > 10ms
+    SysTick_Delay(120/*120*/); // wait > 10ms
 
     LCD_Write_COM(0x29);   //Display on
 //    LCD_Write_COM(0x2c);

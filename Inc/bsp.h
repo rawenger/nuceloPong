@@ -16,12 +16,14 @@
 #include "usb_device.h"
 #include "systick.h"
 #include "spi.h"
+#include "lcd_driver.h"
+#include "nunchuk.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
+void show_welcome_screen();
 
 #ifdef __cplusplus
 }
