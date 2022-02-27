@@ -53,3 +53,7 @@ void SysTick_Delay(uint32_t msDelay) {
 uint32_t HAL_GetTick() {
     return msTick;
 }
+
+uint32_t SysTick_GetClk() {
+    return msTick;
+}
