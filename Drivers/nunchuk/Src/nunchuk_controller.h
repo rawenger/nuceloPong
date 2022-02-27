@@ -54,6 +54,7 @@ private:
     // time since the nunchuk I2C was last read
     uint32_t last_update;
 
+    void read_peripheral();
 public:
     explicit nunchuk(I2C_TypeDef *i2c);
 
@@ -62,7 +63,6 @@ public:
     // blocking (~100ms) delay at the end of read_peripheral is run in a non-blocking mode, and calls to the
     // getters below will then be able to call read_peripheral internally, without necessarily having to wait
     // for the read to happen--if the delay has not expired, then old values can simply be reused.
-    void read_peripheral();
 
     [[nodiscard]] inline int get_stick_x() { read_peripheral(); return stick.get_x(); }
     [[nodiscard]] inline int get_stick_y() { read_peripheral(); return stick.get_y(); }

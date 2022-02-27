@@ -17,10 +17,6 @@ void Init_nunchuk(I2C_TypeDef *i2c_channel) {
     nc = new nunchuk(i2c_channel);
 }
 
-void Nunchuk_updateValues() {
-    nc->read_peripheral();
-}
-
 int Nunchuk_readJoystickX() {
     return nc->get_stick_x();
 }

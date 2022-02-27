@@ -14,7 +14,6 @@ extern "C" {
 #endif
 
 void Init_nunchuk(I2C_TypeDef *i2c_channel);
-void Nunchuk_updateValues();
 int Nunchuk_readJoystickX();
 int Nunchuk_readJoystickY();
 int Nunchuk_readCButton();

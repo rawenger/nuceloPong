@@ -78,13 +78,12 @@ static void device_init() {
 static mouse m = { .params = {.buttons = 0, .x = 0, .y = 0, .wheel = 0, .wakeup = 0 } };
 
 void move_mouse() {
-    Nunchuk_updateValues();
 //        fflush(NULL);
     m.params.x = (int8_t) Nunchuk_readJoystickX();
     m.params.y = (int8_t) (-1 * Nunchuk_readJoystickY()); // mouse inverts y-axis
     m.params.buttons = (int8_t) (Nunchuk_readCButton() + (Nunchuk_readZButton() << 1));
 //        printf("joystick: <%d, %d>\r\n", m.params.x, -1 * m.params.y);
-//    USBD_HID_SendReport(&hUsbDeviceFS, m.buf, 5);
+    USBD_HID_SendReport(&hUsbDeviceFS, m.buf, 5);
 }
 
 int main(void) {
