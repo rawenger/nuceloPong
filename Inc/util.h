@@ -21,14 +21,16 @@
 #define BTN_GPIO_PIN                    13U
 #define LED_GPIO                        GPIOA
 #define LED_GPIO_PIN                    5U
-#define LCD_MOSI_GPIO                   GPIOA
-#define LCD_MOSI_PIN                    7U          // D11
-#define LCD_SCK_GPIO                    GPIOA
-#define LCD_SCK_PIN                     5U          // D13
+#define LCD_MOSI_GPIO                   GPIOA //GPIOB
+#define LCD_MOSI_PIN                    7U //5U          // D11 (D4)
+#define LCD_SCK_GPIO                    GPIOB
+#define LCD_SCK_PIN                     3U          // D3
 #define LCD_CS_GPIO                     GPIOB
-#define LCD_CS_PIN                      6U          // D10
-#define LCD_DC_GPIO                     GPIOC
-#define LCD_DC_PIN                      7U          // D9
+#define LCD_CS_PIN                      6U //10U          // D10 (D6)
+#define LCD_DC_GPIO                     GPIOC// GPIOB
+#define LCD_DC_PIN                      7U //4U          // D9 (D5)
+#define LCD_RST_GPIO                    GPIOA
+#define LCD_RST_PIN                     9U //8U          // D8 (D7)
 #define LCD_SPI                         SPI1
 #define NUNCHUK_I2C                     I2C1
 

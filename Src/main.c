@@ -40,7 +40,9 @@ typedef union {
 
 static void peripheral_init() {
     SystemClock_Init();
-    SysTick_Init(); // basically just initializes SysTick clock
+    // some delay to get the system up & running before SysTick gets initialized
+    for (volatile int a = 0; a < 0x5000; a++) ;
+    SysTick_Init(); // start SysTick clock & interrupts
 
     GPIO_Init();
     USART_Init();
@@ -51,6 +53,25 @@ static void peripheral_init() {
 
 static void device_init() {
     Init_nunchuk(NUNCHUK_I2C);
+
+    // initialize display
+    // eventually put this in its own function lol
+    LCD_Init();
+
+    LCD_clrScr();
+    LCD_setColor(255, 0, 255);
+    LCD_fillRect(20, 20, 220, 300);
+
+    LCD_setColorBg(0, 0, 0);
+    LCD_setColor(0, 255, 0);
+    LCD_setFont(BigFont);
+    LCD_print("Starting...", 40, 6);
+    LCD_setXY(20, 200, 40, 220);
+    LCD_fastFill();
+
+    SysTick_Delay(3000);
+
+    LCD_clrScr();
 }
 
 
@@ -63,7 +84,7 @@ void move_mouse() {
     m.params.y = (int8_t) (-1 * Nunchuk_readJoystickY()); // mouse inverts y-axis
     m.params.buttons = (int8_t) (Nunchuk_readCButton() + (Nunchuk_readZButton() << 1));
 //        printf("joystick: <%d, %d>\r\n", m.params.x, -1 * m.params.y);
-    USBD_HID_SendReport(&hUsbDeviceFS, m.buf, 5);
+//    USBD_HID_SendReport(&hUsbDeviceFS, m.buf, 5);
 }
 
 int main(void) {
@@ -74,7 +95,9 @@ int main(void) {
     while (GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) ;
     printf("Initialize devices\r\n");
     device_init();
-    GPIO_TogglePin(LED_GPIO, LED_GPIO_PIN);
+    GPIO_SetPin(LED_GPIO, LED_GPIO_PIN);
+
+    USBD_HID_SendReport(&hUsbDeviceFS, m.buf, 5);
 
     QF_run();
 

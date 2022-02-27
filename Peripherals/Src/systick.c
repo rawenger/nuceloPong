@@ -21,10 +21,10 @@ void SysTick_Init() {
     // Load the SysTick Counter Value
     SysTick->VAL = 0UL;
 
+    msTick = 0U;
+
     // Enable SysTick IRQ and SysTick Timer using system clock source
     SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
-
-    msTick = 0U;
 }
 
 void SysTick_Handler() {
@@ -34,6 +34,7 @@ void SysTick_Handler() {
 void HAL_Delay(uint32_t Delay) {
     uint32_t initial = msTick;
 
+    // handle case where clock is about to change
     if (Delay < 0xFFFFFFFFU)
         Delay += TICK_FREQ;
 

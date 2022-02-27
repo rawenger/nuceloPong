@@ -7,72 +7,86 @@
 
 void SPI_Init(void){
     // (a) Enable the SPI clock
-    RCC->APB1ENR1 |= RCC_APB1ENR1_SPI2EN;
+    RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
 
-    // (b) Set the RCC SPI reset bit, then clear it to reset the SPI2 peripheral
-    RCC->APB1RSTR1 |= RCC_APB1RSTR1_SPI2RST;
-    while (!(RCC->APB1RSTR1 & RCC_APB1RSTR1_SPI2RST)) ;
-    RCC->APB1RSTR1 &= ~RCC_APB1RSTR1_SPI2RST;
+    // (b) Set the RCC SPI reset bit, then clear it to reset the SPI1 peripheral
+    RCC->APB2RSTR |= RCC_APB2RSTR_SPI1RST;
+    while (!(RCC->APB2RSTR & RCC_APB2RSTR_SPI1RST)) ;
+    RCC->APB2RSTR &= ~RCC_APB2RSTR_SPI1RST;
 
     // (c) Disable the SPI enable bit. The peripheral must be configured while it is disabled.
-    SPI2->CR1 &= ~SPI_CR1_SPE;
+    SPI1->CR1 &= ~SPI_CR1_SPE;
 
     // (d) Configure the peripheral for full-duplex communication.
-    SPI2->CR1 &= ~SPI_CR1_RXONLY;
+    SPI1->CR1 &= ~SPI_CR1_RXONLY;
 
     // (e) Configure the peripheral for 2-line unidirectional data mode.
-    SPI2->CR1 &= ~SPI_CR1_BIDIMODE;
+    SPI1->CR1 &= ~SPI_CR1_BIDIMODE;
 
     // (f) Disable output in bidirectional mode.
-    SPI2->CR1 &= ~SPI_CR1_BIDIOE;
+    SPI1->CR1 &= ~SPI_CR1_BIDIOE;
+//    SPI1->CR1 |= SPI_CR1_BIDIOE;
 
     // (g) Configure the frame format as MSB first.
-    SPI2->CR1 &= ~SPI_CR1_LSBFIRST;
+    SPI1->CR1 &= ~SPI_CR1_LSBFIRST;
 
     // (h) Configure the frame format to 8-bit mode.
-    SPI2->CR2 |= SPI_CR2_DS;
-    SPI2->CR2 &= ~SPI_CR2_DS_3;
+    SPI1->CR2 |= SPI_CR2_DS;
+    SPI1->CR2 &= ~SPI_CR2_DS_3;
 
     // (i) Use Motorola SPI mode.
-    SPI2->CR2 &= ~SPI_CR2_FRF;
+    SPI1->CR2 &= ~SPI_CR2_FRF;
 
     // (j) Configure the clock to low polarity.
-    SPI2->CR1 &= ~SPI_CR1_CPOL;
+    SPI1->CR1 &= ~SPI_CR1_CPOL;
 
     // (k) Configure the clock to first clock transition.
-    SPI2->CR1 &= ~SPI_CR1_CPHA;
+    SPI1->CR1 &= ~SPI_CR1_CPHA;
 
-    // (l) Set the baud rate prescaler to 16.
-    SPI2->CR1 |= SPI_CR1_BR;
-    SPI2->CR1 &= ~SPI_CR1_BR_2;
+    // (l) Set the baud rate prescaler to 2.
+    SPI1->CR1 &= ~SPI_CR1_BR;
 
     // (m) Disable hardware CRC calculation.
-    SPI2->CR1 &= ~SPI_CR1_CRCEN;
+    SPI1->CR1 &= ~SPI_CR1_CRCEN;
 
-    // (n) Set SPI2 to master mode.
-    SPI2->CR1 |= SPI_CR1_MSTR;
+    // (n) Set SPI1 to master mode.
+    SPI1->CR1 |= SPI_CR1_MSTR;
 
-    // (o) Enable software SSM.
-    SPI2->CR1 |= SPI_CR1_SSM;
+    // (o) Enable software SSM and internal slave select (idk if the 2nd is necessary).
+    SPI1->CR1 |= SPI_CR1_SSM;
+    SPI1->CR1 |= SPI_CR1_SSI;
 
     // (p) Disable NSS pulse generation.
     // maybe need to enable tho
-//    SPI2->CR2 &= ~SPI_CR2_NSSP;
-    SPI2->CR2 |= SPI_CR2_NSSP;
+//    SPI1->CR2 &= ~SPI_CR2_NSSP;
+    SPI1->CR2 |= SPI_CR2_NSSP;
 
     // (q) Set the FIFO threshold to 1/4 (required for 8-bit mode).
-    SPI2->CR2 |= SPI_CR2_FRXTH;
+    SPI1->CR2 |= SPI_CR2_FRXTH;
 
     // (r) Enable the SPI peripheral.
-    SPI2->CR1 |= SPI_CR1_SPE;
+    SPI1->CR1 |= SPI_CR1_SPE;
 }
 
-void SPI_Send_Data(SPI_TypeDef *SPIx, uint8_t write_data) {
-    // (a) Wait for the Transmit Buffer Empty flag to become set.
+void SPI_Send_Data(SPI_TypeDef *SPIx, const uint8_t *write_data, uint32_t length) {
+    // don't wait on the buffer if there's no transmission
+    if (length == 0)
+        return;
+
+    // wait for transmission buffer to empty
     while (!(SPIx->SR & SPI_SR_TXE)) ;
 
-    SPIx->DR = write_data;
+    // write to the data register in packed mode if this is a multibyte transmission
+    for (; length > 1; length -= sizeof(uint16_t)) {
+        while (!(SPIx->SR & SPI_SR_TXE)) ;
+        SPIx->DR = *((uint16_t *) write_data);
+        write_data += sizeof(uint16_t);
+    }
 
-    // (c) Wait for the Busy to become unset for the transmission to complete.
+    // write the last (or only) byte if necessary
+    if (length > 0)
+        *((volatile uint8_t *) &SPIx->DR) = *write_data;
+
+    // don't return until the SPI is no longer busy; otherwise weird stuff happens sometimes
     while (SPIx->SR & SPI_SR_BSY) ;
 }
