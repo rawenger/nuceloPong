@@ -55,11 +55,30 @@ static void GreenLED_Init(void) {
     GPIOA->PUPDR &= ~GPIO_PUPDR_PUPD5; // Set PA5 to No Pull-Up, No Pull-Down
 }
 
+// enable pushbutton polling input & interrupts
 static void BluePushbutton_Init(void) {
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
 
     GPIOC->MODER &= ~GPIO_MODER_MODE13; // Set mode of PC13 to Input
     GPIOC->PUPDR &= ~GPIO_PUPDR_PUPD13; // Set PC13 to no pull-up and no pull-down
+
+    // Configure SYSCFG EXTI
+    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+    SYSCFG->EXTICR[3] &= ~SYSCFG_EXTICR4_EXTI13;
+    SYSCFG->EXTICR[3] |= SYSCFG_EXTICR4_EXTI13_PC;
+
+    // Configure EXTI Trigger to falling edge only
+    EXTI->RTSR1 &= ~EXTI_RTSR1_RT13;
+    EXTI->FTSR1 |= EXTI_FTSR1_FT13;
+
+    // Configure and Enable in NVIC
+    // (EXTI lines 15:10 share the same interrupt number; we're only using line 13)
+    NVIC_EnableIRQ(EXTI15_10_IRQn);
+    NVIC_SetPriority(EXTI15_10_IRQn, 10);
+
+    // Enable EXTI mask register
+    // 0 = masked, 1 = not masked (enabled)
+    EXTI->IMR1 |= EXTI_IMR1_IM13;
 }
 
 //initialize PA12 AF10 (USB D+), PA11 AF10 (USB D-)

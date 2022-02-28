@@ -24,6 +24,31 @@ extern "C" {
 #endif
 
 void show_welcome_screen();
+void hide_welcome_screen();
+
+// these might get moved later; they're just here now as stubs
+struct config {
+    int random_mode;
+};
+
+void show_menu(struct config *current_cfg);
+void menu_set_config(struct config *cfg);
+void hide_menu();
+
+// "Use the joystick to move the cursor to the center of the cup. When ready, press the 'c' button to throw."
+void show_cup_select_instructions();
+void hide_cup_select_instructions();
+
+void reset_cursor();
+void track_cursor();
+
+void show_game_animation();
+void hide_game_animation();
+void show_finished_screen();
+void hide_finished_screen();
+void throw_ball();
+
+void behave_as_mouse();
 
 #ifdef __cplusplus
 }

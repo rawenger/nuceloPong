@@ -153,14 +153,14 @@ void QActive_disarm(QActive *me) {
 #ifndef QK_PREEMPTIVE
 
 _Noreturn void QF_run(void) {
-    printf("\n\rInside QF run before anything");
+    LOG("Inside QF run before anything\r\n");
     static uint8_t const Q_ROM Q_ROM_VAR log2Lkup[] = {
             0, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4
     };
     static uint8_t const Q_ROM Q_ROM_VAR invPow2Lkup[] = {
             0xFF, 0xFE, 0xFD, 0xFB, 0xF7, 0xEF, 0xDF, 0xBF, 0x7F
     };
-    printf("\n\rInside QF run 1");
+    LOG("Inside QF run 1\r\n");
     uint8_t p;
     QActive *a;
     /* set priorities all registered active objects... */
@@ -169,7 +169,7 @@ _Noreturn void QF_run(void) {
         Q_ASSERT(a != (QActive *)0);    /* QF_active[p] must be initialized */
         a->prio = p;               /* set the priority of the active object */
     }
-    printf("\n\rInside QF run 2");
+    LOG("Inside QF run 2\r\n");
     /* trigger initial transitions in all registered active objects... */
     for (p = (uint8_t)1; p <= (uint8_t)QF_MAX_ACTIVE; ++p) {
         a = (QActive *)Q_ROM_PTR(QF_active[p].act);

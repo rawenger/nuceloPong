@@ -7,6 +7,8 @@
 #ifndef NUCLEOPONG_UTIL_H
 #define NUCLEOPONG_UTIL_H
 
+#define DEBUG_LOGGING
+
 
 #define _CONCAT(_x, _y)                 _x##_y
 #define CONCAT(_x, _y)                  _CONCAT(_x,_y)
@@ -38,6 +40,13 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#ifdef DEBUG_LOGGING
+#define LOG(...)               printf(__VA_ARGS__)
+#else
+#define LOG(...)
+#endif
+
 #ifdef __cplusplus
 }
 #endif

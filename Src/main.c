@@ -58,19 +58,27 @@ static void device_init() {
 
     SysTick_Delay(1000);
 
+//    LCD_setColor(0, 0, 255);
+//    LCD_fillRect(10, 10, 230, 310);
+//
+//    SysTick_Delay(1000);
+
     LCD_clrScr();
 }
 
 int main(void) {
     PongBot_ctor();
     peripheral_init();
-    printf("\r\nInitialized peripherals\r\n");
+    // disable btn interrupts before state machine is initialized
+//    QF_INT_LOCK();
+    LOG("\r\nInitialized peripherals\r\n");
     // wait for button press before proceeding
-    while (GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) ;
-    printf("Initialize devices\r\n");
+//    while (GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) ;
+    LOG("Initialize devices\r\n");
     device_init();
     GPIO_SetPin(LED_GPIO, LED_GPIO_PIN);
 
+//    QF_INT_UNLOCK();
     QF_run();
 
 #pragma clang diagnostic push

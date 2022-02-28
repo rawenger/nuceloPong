@@ -10,13 +10,13 @@ static volatile uint32_t msTick;
 void SysTick_Init() {
     NVIC_SetPriorityGrouping(0x00000003U); // 4 bits for pre-emption priority, 0 bits for subpriority
 
-   uint32_t ticks = SYSCLOCK_FREQ / (1000U / (uint32_t)TICK_FREQ);
+   uint32_t ticks = SYSCLOCK_FREQ / (1000 / (uint32_t)TICK_FREQ);
 
     // set reload register
     SysTick->LOAD = (uint32_t)(ticks - 1UL);
 
     // set Priority for Systick Interrupt
-    NVIC_SetPriority(SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL);
+    NVIC_SetPriority(SysTick_IRQn, 1);//(1UL << __NVIC_PRIO_BITS) - 1UL);
 
     // Load the SysTick Counter Value
     SysTick->VAL = 0UL;
@@ -25,6 +25,7 @@ void SysTick_Init() {
 
     // Enable SysTick IRQ and SysTick Timer using system clock source
     SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
+    NVIC_EnableIRQ(SysTick_IRQn);
 }
 
 void SysTick_Handler() {

@@ -165,7 +165,7 @@ void LCD_Init(void) {
     LCD_Write_DATA(0x0F);
 
     LCD_Write_COM(0x11);   //Exit Sleep
-    SysTick_Delay(120/*120*/); // wait > 10ms
+    SysTick_Delay(120); // wait > 10ms
 
     LCD_Write_COM(0x29);   //Display on
 //    LCD_Write_COM(0x2c);
@@ -184,16 +184,12 @@ void LCD_setXY(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {
     Y2 = y2;
 
     LCD_Write_COM(0x2A);
-    LCD_Write_DATA(x1 >> 8U);
-    LCD_Write_DATA(x1);
-    LCD_Write_DATA(x2 >> 8U);
-    LCD_Write_DATA(x2);
+    LCD_Write_DATA16(x1 >> 8U, x1);
+    LCD_Write_DATA16(x2 >> 8U, x2);
 
     LCD_Write_COM(0x2B);
-    LCD_Write_DATA(y1 >> 8U);
-    LCD_Write_DATA(y1);
-    LCD_Write_DATA(y2 >> 8U);
-    LCD_Write_DATA(y2);
+    LCD_Write_DATA16(y1 >> 8U, y1);
+    LCD_Write_DATA16(y2 >> 8U, y2);
 
     LCD_Write_COM(0x2C);
 }
