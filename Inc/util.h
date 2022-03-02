@@ -42,7 +42,7 @@ extern "C" {
 #endif
 
 #ifdef DEBUG_LOGGING
-#define LOG(...)               printf(__VA_ARGS__)
+#define LOG(...)               { printf(__VA_ARGS__); fflush(NULL); }
 #else
 #define LOG(...)
 #endif
