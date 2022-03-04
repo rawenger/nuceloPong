@@ -19,7 +19,7 @@
 extern "C" {
 #endif
 
-#define TICK_FREQ                       1U // 1 kHz
+#define TICK_FREQ                       1000U // 1 MHz
 #define SYSCLOCK_FREQ                   80000000U // 80 MHz
 
 
@@ -31,6 +31,12 @@ void SysTick_Init();
  * @param msDelay time to delay in ms
  */
 void SysTick_Delay(uint32_t msDelay);
+
+/**
+ * @brief A blocking delay which lasts for the specified time
+ * @param usDelay time to delay in μs
+ */
+void SysTick_uDelay(uint32_t usDelay);
 
 void SysTick_Handler() __attribute__ ((interrupt ("IRQ")));
 
