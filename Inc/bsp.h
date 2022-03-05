@@ -18,6 +18,7 @@
 #include "spi.h"
 #include "lcd_driver.h"
 #include "nunchuk.h"
+#include "cup_pong_bot.h"
 
 #ifdef __cplusplus
 extern "C" {

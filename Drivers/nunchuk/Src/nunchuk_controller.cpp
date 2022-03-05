@@ -6,10 +6,15 @@
 #include "nunchuk_controller.h"
 #include "systick.h"
 
-nunchuk::nunchuk(I2C_TypeDef *i2c) : i2c_channel(i2c), last_update(0xFFFFFFFFU) {
-    // initialize the nunchuk
+nunchuk::nunchuk(I2C_TypeDef *i2c) : i2c_channel(i2c) {
+    // send init commands to the nunchuk
     I2C_SendData(i2c_channel, nunchuk_write_addr, init_commands, 2);
     I2C_SendData(i2c_channel, nunchuk_write_addr, begin_commands, 2);
+
+    // ensure the first call to read_peripheral always updates
+    I2C_ReceiveData(i2c_channel, nunchuk_read_addr, raw_data, 6);
+    I2C_SendData(i2c_channel, nunchuk_write_addr, &zero, 1);
+    last_update = SysTick_GetClk();
 }
 
 void nunchuk::read_peripheral() {
