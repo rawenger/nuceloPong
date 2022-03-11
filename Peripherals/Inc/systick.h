@@ -38,7 +38,7 @@ void SysTick_Delay(uint32_t msDelay);
  */
 void SysTick_uDelay(uint32_t usDelay);
 
-void SysTick_Handler() __attribute__ ((interrupt ("IRQ")));
+void SysTick_Handler();
 
 uint32_t SysTick_GetClk();
 
