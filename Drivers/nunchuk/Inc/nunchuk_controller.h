@@ -79,7 +79,7 @@ public:
 };
 
 
-nunchuk *nc = nullptr;
+extern nunchuk *nc;
 
 
 #endif //NUCLEOPONG_NUNCHUK_CONTROLLER_H

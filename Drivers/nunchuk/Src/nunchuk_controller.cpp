@@ -6,6 +6,8 @@
 #include "nunchuk_controller.h"
 #include "systick.h"
 
+nunchuk *nc = nullptr;
+
 nunchuk::nunchuk(I2C_TypeDef *i2c) : i2c_channel(i2c) {
     // send init commands to the nunchuk
     I2C_SendData(i2c_channel, nunchuk_write_addr, init_commands, 2);

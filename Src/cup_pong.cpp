@@ -3,51 +3,102 @@
  * This file is provided AS-IS with no warranty.
  */
 
-#include "cup_pong_bot.h"
-#include "nunchuk.h"
-#include "usbd_hid.h"
-#include "usb_device.h"
-#include "systick.h"
+/*
+ * C-compatible interface for mouse & pong_bot classes
+ */
+
+
+#include "cup_pong.h"
+#include "pong_bot.h"
 
 // possibly refactor these into a different file -- needed by Mouse_trackCursor()
 #include "qpn_port.h"
 #include "statemachine.h"
 
-#define send_report()           { USBD_HID_SendReport(&hUsbDeviceFS, m.report, sizeof m); \
-                                    SysTick_Delay(POLLING_RATE); }
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#define mouse_release()         {  m.report[0] = 0; m.report[1] = 0; m.report[2] = 0; m.report[3] = 0; \
-                                    SysTick_Delay(100);}
+void Mouse_calibrateSensitivity() {
+    mouse::calibrate_sensitivity();
+}
 
-// ball grabbing sequence at to begin the throw
-#define grab_ball()             { find_ball(); \
-                                    /*move_mouse(1, 0, 0);*/ }
+// move the mouse cursor and track its position
+void Mouse_trackCursor() {
+    if (mouse::track_cursor())
+        // TODO: check if this needs to be the ISR version
+        QActive_post/*ISR*/((QActive *) &nucleoPong, C_BTN);
+}
 
-// cursor release sequence for proper follow-through on the throw
-#define follow_through()        { SysTick_Delay(5); \
-                                    m.params.buttons = 0; \
-                                    send_report(); \
-                                    mouse_release(); }
+void Mouse_behaveAsMouse() {
+    mouse::behave_as_mouse();
+}
 
+void Mouse_move(int8_t click, int8_t dx, int8_t dy) {
+    mouse::move(click, dx, dy);
+}
 
-extern USBD_HandleTypeDef hUsbDeviceFS;
+void Mouse_getTrackedCoords(int *x, int *y) {
+    mouse::get_tracked(*x, *y);
+}
 
-static int mouse_x, mouse_y;
+void PongBot_Init() {
+    pb = new pong_bot();
+}
 
-static union {
-    struct {
-        int8_t buttons;
-        int8_t x;
-        int8_t y;
-        int8_t wheel;
-        int8_t wakeup;
-    } params;
-    uint8_t report[5];
-} m = { .params = {.buttons = 0, .x = 0, .y = 0, .wheel = 0, .wakeup = 0 } };
+void PongBot_throwBall() {
+    pb->throw_ball();
+}
 
+int PongBot_didMiss() {
+    return static_cast<int>(pb->did_miss());
+}
 
+int PongBot_getCup() {
+    return pb->get_cup();
+}
+
+//#ifdef __cplusplus
+//}
+//#endif
+
+/*
+
+//#define send_report()           { USBD_HID_SendReport(&hUsbDeviceFS, m.report, sizeof m); \
+//                                    SysTick_Delay(POLLING_RATE); }
+//
+//#define mouse_release()         {  m.report[0] = 0; m.report[1] = 0; m.report[2] = 0; m.report[3] = 0; \
+//                                    send_report(); }
+//
+//// ball grabbing sequence at to begin the throw
+//#define grab_ball()             { find_ball(); \
+//                                    /*move_mouse(1, 0, 0);*/ //}
+//
+//// cursor release sequence for proper follow-through on the throw
+//#define follow_through()        { /*SysTick_Delay(5);*/ \
+//                                    m.params.buttons = 0; \
+//                                    send_report(); \
+//                                    mouse_release(); }
+//
+//
+//extern USBD_HandleTypeDef hUsbDeviceFS;
+//
+//static int mouse_x, mouse_y;
+//
+//static union {
+//    struct {
+//        int8_t buttons;
+//        int8_t x;
+//        int8_t y;
+//        int8_t wheel;
+//        int8_t wakeup;
+//    } params;
+//    uint8_t report[5];
+//} m = { .params = {.buttons = 0, .x = 0, .y = 0, .wheel = 0, .wakeup = 0 } };
+
+/*
 //static void find_ball();
-static void reset();
+//static void reset();
 static void move_mouse(int8_t click, int8_t x, int8_t y);
 //static void mouse_release();
 
@@ -60,10 +111,10 @@ void Mouse_behaveAsMouse() {
 
 void Mouse_trackCursor() {
     m.params.buttons = 0;
-    mouse_x += (m.params.x = (int8_t) Nunchuk_readJoystickX()),
+    mouse_x += (m.params.x = (int8_t) Nunchuk_readJoystickX());
     mouse_y += (m.params.y = (int8_t) (-1 * Nunchuk_readJoystickY())); // mouse inverts y-axis
     send_report();
-//     if (Nunchuk_readCButton())
+//     if (mouse.track_cursor())
 //        QActive_post((QActive *) &nucleoPong, C_BTN);
 }
 
@@ -95,7 +146,7 @@ static inline void move_mouse(int8_t click, int8_t x, int8_t y) {
 //    SysTick_Delay(100);
 //}
 
-static void reset() {
+static inline void reset() {
     mouse_x = mouse_y = 0;
 
     // travel to a known location (bottom left corner of screen)
@@ -117,8 +168,8 @@ static inline void find_ball() {
     m.params.y = -12;
     for (int i = 0; i < 4; i++)
         send_report();
-    m.params.x = 36;
-    m.params.y = -4;
+    m.params.x = 34;
+    m.params.y = -3;
     send_report();
 
     SysTick_Delay(100);
@@ -200,6 +251,7 @@ void cup1_1() {
 
 
 /******* reverse-engineering functions *******/
+/*
 
 // throw ball with specified y power
 #define MIN_PACKET_DISTANCE         (-128)
@@ -262,7 +314,7 @@ void throw_xy(int x_pwr, int y_pwr) {
     USBD_HID_SendReport(&hUsbDeviceFS, m.report, sizeof m);
     m.params.y = MIN_PACKET_DISTANCE;
     m.params.x = x_throw;
-//#pragma GCC unroll 10
+#pragma GCC unroll 10
     for (int throws = 0; throws < full_throws; throws++)
         send_report();
 
@@ -302,9 +354,25 @@ void smooth_throw_xy(int x_pwr, int y_pwr) {
            FULL_THROWS, y_pwr, y_1_3, y_4, x_pwr, x_1_3, x_4);
     fflush(NULL);
 
+    find_ball();
+//    move_mouse(1, 0, 0);
+    m.params.y = y_1_3;
+    m.params.x = x_1_3;
+#pragma GCC unroll 10
+    for (int throws = 0; throws < FULL_THROWS; throws++)
+        send_report();
+
+    m.params.y = y_4;
+    m.params.x = x_4;
+    send_report();
+    follow_through();
+
+    SysTick_Delay(100);
+
     grab_ball();
+    m.params.x = m.params.y = 0;
     m.params.buttons = 1;
-//    USBD_HID_SendReport(&hUsbDeviceFS, m.report, sizeof m);
+    send_report();
     m.params.y = y_1_3;
     m.params.x = x_1_3;
 #pragma GCC unroll 10
@@ -316,6 +384,7 @@ void smooth_throw_xy(int x_pwr, int y_pwr) {
     send_report();
 
     follow_through();
+
     SysTick_Delay(100);
 }
 
@@ -371,8 +440,11 @@ void sample_y(int samples) {
         fflush(NULL);
     }
 }
-
-// take num samples by prompting for a x,y power & throwing, then save the results to an array
+*/
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
+// take num samples by prompting for an x,y power & throwing, then save the results to an array
 // and display them
 void sample_xy(int samples) {
     printf("Sampling y throw %d times\r\n", samples);
@@ -385,7 +457,7 @@ void sample_xy(int samples) {
         scanf("%d %d", &mouse_x_dist, &mouse_y_dist);
         fflush(NULL);
 //        y_buf[i] = mouse_y_dist;
-        smooth_throw_xy(mouse_x_dist, mouse_y_dist);
+        pb->throw_xy(mouse_x_dist, mouse_y_dist);
     }
 
 //    get_results(sample_buf, samples);
@@ -403,3 +475,8 @@ void sample_xy(int samples) {
 //        fflush(NULL);
 //    }
 }
+#ifdef __cplusplus
+}
+#endif
+/*
+*/
