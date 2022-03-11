@@ -67,6 +67,14 @@ void LCD_printChar(uint8_t c, uint16_t x, uint16_t y);
 void LCD_print(const char *st, uint16_t x, uint16_t y);
 
 /**
+ * LCD_print with support for newlines and carriage returns
+ * @param st string buffer to print
+ * @param x x position of upper left corner of text
+ * @param y y position of upper left corner of text
+ */
+void LCD_printLong(const char *st, uint16_t x, uint16_t y);
+
+/**
  * Gets the width of the current font, in px
  * @return `uint8_t`, x font size
  */

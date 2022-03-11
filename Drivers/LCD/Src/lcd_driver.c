@@ -320,6 +320,24 @@ void LCD_print(const char *st, uint16_t x, uint16_t y) {
         LCD_printChar(*st++, x + cfont.x_size * i++, y);
 }
 
+void LCD_printLong(const char *st, uint16_t x, uint16_t y) {
+    int i = 0;
+
+    while (*st != '\0') {
+            switch (*st) {
+                case '\n':
+                    y += cfont.y_size;
+                    // fall through to next case to return cursor to line start
+                case '\r':
+                    i = 0;
+                    break;
+                default:
+                    LCD_printChar(*st, x + cfont.x_size * i++, y);
+            }
+            ++st;
+    }
+}
+
 void LCD_fastFill() {
     uint32_t size = (X2 - X1) * (Y2 - Y1);
 
