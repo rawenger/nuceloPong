@@ -352,6 +352,10 @@ void LCD_fastFill() {
     GPIO_SetPin(LCD_CS_GPIO, LCD_CS_PIN);
 }
 
-uint16_t LCD_getFontSize() {
-    return *(uint16_t *) &cfont.x_size;
+uint8_t LCD_getFontX() {
+    return cfont.x_size;
+}
+
+uint8_t LCD_getFontY() {
+    return cfont.y_size;
 }
