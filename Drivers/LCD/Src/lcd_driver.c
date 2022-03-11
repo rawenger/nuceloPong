@@ -353,7 +353,5 @@ void LCD_fastFill() {
 }
 
 uint16_t LCD_getFontSize() {
-    uint16_t res = *(uint16_t *) &cfont.x_size;
-    LOG("x: %d, y: %d\r\n", res & 0xFF, res >> 8U);
-    return res;
+    return *(uint16_t *) &cfont.x_size;
 }
