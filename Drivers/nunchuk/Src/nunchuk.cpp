@@ -11,7 +11,6 @@
 extern "C" {
 #endif
 
-static nunchuk *nc;
 
 void Init_nunchuk(I2C_TypeDef *i2c_channel) {
     nc = new nunchuk(i2c_channel);
