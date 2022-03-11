@@ -13,7 +13,7 @@ void SysTick_Init() {
     uint32_t ticks = SYSCLOCK_FREQ / ((uint32_t) TICK_FREQ * 1000);
 
     // set reload register
-    SysTick->LOAD = (uint32_t)(ticks - 1UL);
+    SysTick->LOAD = (uint32_t)(ticks - 1);
 
     // set Priority for Systick Interrupt
     NVIC_SetPriority(SysTick_IRQn, 1);//(1UL << __NVIC_PRIO_BITS) - 1UL);
@@ -51,6 +51,7 @@ void SysTick_Delay(uint32_t msDelay) {
 
     while ((usTick - initial) < 1000U * msDelay) ;
 }
+
 
 void SysTick_uDelay(uint32_t usDelay) {
     uint32_t initial = usTick;
