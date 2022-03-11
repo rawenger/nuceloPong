@@ -40,6 +40,7 @@ static void peripheral_init() {
 
 static void device_init() {
     Init_nunchuk(NUNCHUK_I2C);
+    PongBot_Init();
 
     // initialize display
     // eventually put this in its own function lol
@@ -78,7 +79,7 @@ int main(void) {
     LOG("Initialize devices\r\n");
     device_init();
     GPIO_SetPin(LED_GPIO, LED_GPIO_PIN);
-//    uint8_t m[4] = {1,0,0,0};
+    uint8_t m[4] = {1,0,0,0};
 //    uint8_t m = 1;
 //    printf("initial value of clicks: %lu\r\n", clicks);
 
@@ -91,19 +92,20 @@ int main(void) {
 //        m[0] = 1;
 //        USBD_HID_SendReport(&hUsbDeviceFS, m, 4);
 //        m[0] = 0;
-//        SysTick_Delay(8);
+        SysTick_Delay(8);
 //        USBD_HID_SendReport(&hUsbDeviceFS, m, 4);
 //        ++clicks;
 //        SysTick_Delay(8);
-//        Mouse_behaveAsMouse();
-        if (!GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) {
-            printf("Enter number of trials: ");
-            int trials;
-            fflush(NULL);
-            scanf("%d", &trials);
-            fflush(NULL);
-            sample_xy(trials);
-        }
+//        if (!GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) {
+//            printf("Enter number of trials: ");
+//            int trials;
+//            fflush(NULL);
+//            scanf("%d", &trials);
+//            fflush(NULL);
+//            sample_xy(trials);
+////            gotoball();
+//        }
+        Mouse_behaveAsMouse();
     }
 #pragma clang diagnostic pop
 //    QF_INT_UNLOCK();

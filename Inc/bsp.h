@@ -18,7 +18,7 @@
 #include "spi.h"
 #include "lcd_driver.h"
 #include "nunchuk.h"
-#include "cup_pong_bot.h"
+#include "cup_pong.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,7 +47,7 @@ void show_game_animation();
 void hide_game_animation();
 void show_finished_screen();
 void hide_finished_screen();
-void throw_ball();
+void PongBot_throwBall();
 
 void behave_as_mouse();
 
