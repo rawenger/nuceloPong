@@ -66,6 +66,12 @@ void LCD_printChar(uint8_t c, uint16_t x, uint16_t y);
 
 void LCD_print(const char *st, uint16_t x, uint16_t y);
 
+/**
+ * Gets the size of the current font, in px
+ * @return `uint16_t`, upper 8 bits x size, lower 8 bits y size
+ */
+uint16_t LCD_getFontSize();
+
 
 
 #ifdef __cplusplus
