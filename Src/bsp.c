@@ -45,8 +45,7 @@ void EXTI15_10_IRQHandler(void) {
     if (EXTI->PR1 & EXTI_PR1_PIF13) {
 
         // dispatch signal to state machine after exit from ISR
-        QActive_postISR((QActive *) &nucleoPong, BTN_CLICK);
-
+//        QActive_postISR((QActive *) &nucleoPong, BTN_CLICK);
         // Clear interrupt pending bit
         EXTI->PR1 |= EXTI_PR1_PIF13;
 
@@ -73,6 +72,6 @@ void show_game_animation() { return; }
 void hide_game_animation() { return; }
 void show_finished_screen() { return; }
 void hide_finished_screen() { return; }
-void throw_ball() { return; }
+//void PongBot_throwBall() { return; }
 
 void behave_as_mouse() { return; }

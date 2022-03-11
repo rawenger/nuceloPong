@@ -15,7 +15,7 @@
 #include "bsp.h"
 #include "statemachine.h"
 #include "lcd_driver.h"
-#include "cup_pong_bot.h"
+#include "cup_pong.h"
 
 typedef struct PongBotTag {               // Cup Pong bot State machine
     QActive super;
@@ -108,7 +108,7 @@ QState PongBot_play(PongBot_HSM *me) {
 
         case IDLE: {
 //            LOG("PongBot_play: IDLE\r\n");
-            throw_ball();
+            PongBot_throwBall();
         }
 
         case FINISHED: {
@@ -141,7 +141,7 @@ QState PongBot_selectCup(PongBot_HSM *me) {
 
         case C_BTN: {
             LOG("PongBot_selectCup: C_BTN\r\n");
-            throw_ball();
+            PongBot_throwBall();
             return Q_HANDLED();
         }
     }
