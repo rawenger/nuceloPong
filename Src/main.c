@@ -75,41 +75,14 @@ int main(void) {
     peripheral_init();
     LOG("\r\nInitialized peripherals\r\n");
     // wait for button press before proceeding
-    while (GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) ;
+//    while (GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) ;
     LOG("Initialize devices\r\n");
     device_init();
     GPIO_SetPin(LED_GPIO, LED_GPIO_PIN);
-    uint8_t m[4] = {1,0,0,0};
 //    uint8_t m = 1;
-//    printf("initial value of clicks: %lu\r\n", clicks);
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "EndlessLoop"
-    while (1) {
-//        GPIO_TogglePin(LED_GPIO, LED_GPIO_PIN);
-//        SysTick_Delay(1000);
-//        Mouse_behaveAsMouse();
-//        m[0] = 1;
-//        USBD_HID_SendReport(&hUsbDeviceFS, m, 4);
-//        m[0] = 0;
-        SysTick_Delay(8);
-//        USBD_HID_SendReport(&hUsbDeviceFS, m, 4);
-//        ++clicks;
-//        SysTick_Delay(8);
-//        if (!GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) {
-//            printf("Enter number of trials: ");
-//            int trials;
-//            fflush(NULL);
-//            scanf("%d", &trials);
-//            fflush(NULL);
-//            sample_xy(trials);
-////            gotoball();
-//        }
-        Mouse_behaveAsMouse();
-    }
-#pragma clang diagnostic pop
-//    QF_INT_UNLOCK();
-//    QF_run();
+    QF_INT_UNLOCK();
+    QF_run();
 
     return 0;
 }

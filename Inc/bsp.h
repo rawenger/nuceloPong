@@ -47,7 +47,6 @@ void show_game_animation();
 void hide_game_animation();
 void show_finished_screen();
 void hide_finished_screen();
-void PongBot_throwBall();
 
 void behave_as_mouse();
 

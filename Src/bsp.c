@@ -45,7 +45,7 @@ void EXTI15_10_IRQHandler(void) {
     if (EXTI->PR1 & EXTI_PR1_PIF13) {
 
         // dispatch signal to state machine after exit from ISR
-//        QActive_postISR((QActive *) &nucleoPong, BTN_CLICK);
+        QActive_postISR((QActive *) &nucleoPong, BTN_CLICK);
         // Clear interrupt pending bit
         EXTI->PR1 |= EXTI_PR1_PIF13;
 
