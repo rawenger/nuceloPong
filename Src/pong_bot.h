@@ -171,7 +171,7 @@ public:
     /**
      * @return Next cup to target (0-9)
      */
-    inline int get_cup() const { return cup; }
+    [[nodiscard]] inline int get_cup() const { return cup; }
 };
 
 extern pong_bot *pb;
