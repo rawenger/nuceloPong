@@ -26,16 +26,16 @@
 #endif
 /* Exported functions prototypes ---------------------------------------------*/
 
-void NMI_Handler(void) __attribute__ ((interrupt ("IRQ")));
-void HardFault_Handler(void) __attribute__ ((interrupt ("IRQ")));
-void MemManage_Handler(void) __attribute__ ((interrupt ("IRQ")));
-void BusFault_Handler(void) __attribute__ ((interrupt ("IRQ")));
-void UsageFault_Handler(void) __attribute__ ((interrupt ("IRQ")));
-void SVC_Handler(void) __attribute__ ((interrupt ("IRQ")));
-void DebugMon_Handler(void) __attribute__ ((interrupt ("IRQ")));
-void PendSV_Handler(void) __attribute__ ((interrupt ("IRQ")));
-void SysTick_Handler(void) __attribute__ ((interrupt ("IRQ")));
-void OTG_FS_IRQHandler(void) __attribute__ ((interrupt ("IRQ")));
+void NMI_Handler(void);
+void HardFault_Handler(void);
+void MemManage_Handler(void);
+void BusFault_Handler(void);
+void UsageFault_Handler(void);
+void SVC_Handler(void);
+void DebugMon_Handler(void);
+void PendSV_Handler(void);
+void SysTick_Handler(void);
+void OTG_FS_IRQHandler(void);
 
 #ifdef __cplusplus
 }
