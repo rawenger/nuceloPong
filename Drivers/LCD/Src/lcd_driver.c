@@ -289,7 +289,7 @@ void LCD_fillTriangle(uint16_t x, uint16_t y, int w, int h) {
 }
 
 // Select the font used by print() and printChar()
-void LCD_setFont(uint8_t *font) {
+void LCD_setFont(const uint8_t *font) {
     cfont.font = font;
     cfont.x_size = font[0];
     cfont.y_size = font[1];

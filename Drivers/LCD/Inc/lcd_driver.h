@@ -27,10 +27,15 @@ struct current_font {
     uint8_t numchars;
 };
 
-// defined in ../Src/fonts.c
-extern uint8_t SmallFont[];
-extern uint8_t BigFont[];
-extern uint8_t SevenSegNumFont[];
+// defined in ../Src/fonts.cpp
+#ifdef __cplusplus
+extern constexpr uint8_t SmallFont[];
+extern constexpr uint8_t BigFont[];
+#else
+extern const uint8_t SmallFont[];
+extern const uint8_t BigFont[];
+#endif
+//extern uint8_t SevenSegNumFont[];
 
 void LCD_Write_COM(uint8_t VL);
 
@@ -62,7 +67,7 @@ void LCD_fillRect(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 
 void LCD_fillTriangle(uint16_t x, uint16_t y, int w, int h);
 
-void LCD_setFont(uint8_t *font);
+void LCD_setFont(const uint8_t *font);
 
 void LCD_printChar(uint8_t c, uint16_t x, uint16_t y);
 
