@@ -50,6 +50,8 @@ void LCD_clrXY(void);
 
 void LCD_clrScr(void);
 
+void LCD_fillScr(void);
+
 void LCD_fastFill();
 
 void LCD_drawHLine(uint16_t x, uint16_t y, int l);
@@ -67,7 +69,8 @@ void LCD_printChar(uint8_t c, uint16_t x, uint16_t y);
 void LCD_print(const char *st, uint16_t x, uint16_t y);
 
 /**
- * LCD_print with support for newlines and carriage returns
+ * LCD_print with support for newlines, carriage returns, and automatic
+ * line breaks
  * @param st string buffer to print
  * @param x x position of upper left corner of text
  * @param y y position of upper left corner of text

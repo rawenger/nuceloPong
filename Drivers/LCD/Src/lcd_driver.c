@@ -216,6 +216,13 @@ void LCD_clrScr(void) {
     LCD_fastFill();
 }
 
+// fill screen with selected color
+void LCD_fillScr(void) {
+    LCD_setXY(0, 0, DISP_X_SIZE, DISP_Y_SIZE);
+    LCD_fastFill();
+}
+
+
 // Remove drawing boundary
 void LCD_clrXY(void) {
     X1 = X2 = Y1 = Y2 = 0;
@@ -339,6 +346,7 @@ void LCD_printLong(const char *st, uint16_t x, uint16_t y) {
 }
 
 void LCD_fastFill() {
+
     uint32_t size = (X2 - X1) * (Y2 - Y1);
 
     GPIO_SetPin(LCD_DC_GPIO, LCD_DC_PIN);

@@ -13,11 +13,11 @@
 #include "qpn_port.h"
 #include "statemachine.h"
 
-static QEvent l_ChromaticTunerQueue[30];
+static QEvent l_nucleoPongQueue[30];
 
 QActiveCB const Q_ROM Q_ROM_VAR QF_active[] = {
         { (QActive *)0,            (QEvent *)0,          0                    },
-        { (QActive *)&nucleoPong, l_ChromaticTunerQueue, Q_DIM(l_ChromaticTunerQueue)  }
+        { (QActive *)&nucleoPong, l_nucleoPongQueue, Q_DIM(l_nucleoPongQueue)  }
 };
 
 Q_ASSERT_COMPILE(QF_MAX_ACTIVE == Q_DIM(QF_active) - 1);
@@ -40,38 +40,18 @@ static void peripheral_init() {
 
 static void device_init() {
     Init_nunchuk(NUNCHUK_I2C);
+
     PongBot_Init();
 
     // initialize display
-    // eventually put this in its own function lol
-//    LCD_Init();
-//
-//    LCD_clrScr();
-//    LCD_setColor(255, 0, 255);
-//    LCD_fillRect(20, 20, 220, 300);
-//
-//    LCD_setColorBg(0, 0, 0);
-//    LCD_setColor(0, 255, 0);
-//    LCD_setFont(BigFont);
-//    LCD_print("Starting...", 40, 6);
-//    LCD_setXY(20, 200, 40, 220);
-//    LCD_fastFill();
-//
-//    SysTick_Delay(1000);
-//
-////    LCD_setColor(0, 0, 255);
-////    LCD_fillRect(10, 10, 230, 310);
-////
-////    SysTick_Delay(1000);
-//
-//    LCD_clrScr();
+    Display_Init();
 }
 
 
 
 extern void gotoball();
 int main(void) {
-//    PongBot_ctor();
+    PongBot_ctor();
     peripheral_init();
     LOG("\r\nInitialized peripherals\r\n");
     // wait for button press before proceeding
@@ -79,12 +59,11 @@ int main(void) {
     LOG("Initialize devices\r\n");
     device_init();
     GPIO_SetPin(LED_GPIO, LED_GPIO_PIN);
-//    uint8_t m = 1;
 
     QF_INT_UNLOCK();
     QF_run();
 
-    return 0;
+    return 1;
 }
 
 _Noreturn void Error_Handler(void) {
