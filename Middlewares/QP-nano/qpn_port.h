@@ -20,8 +20,8 @@ extern "C" {
 #define QF_MAX_ACTIVE           1
 
 /* interrupt locking policy for XPS compiler. we only care about the GPIO button interrupts here */
-#define QF_INT_LOCK()           NVIC_DisableIRQ(EXTI15_10_IRQn);
-#define QF_INT_UNLOCK()         NVIC_EnableIRQ(EXTI15_10_IRQn);
+#define QF_INT_LOCK()           __disable_irq(); //NVIC_DisableIRQ(EXTI15_10_IRQn);
+#define QF_INT_UNLOCK()         __enable_irq(); //NVIC_EnableIRQ(EXTI15_10_IRQn);
 #define Q_ROM_PTR(rom_var_)     rom_var_
 #define Q_ROM_BYTE(rom_var_)    rom_var_
 

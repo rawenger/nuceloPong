@@ -19,13 +19,13 @@
 #include "lcd_driver.h"
 #include "nunchuk.h"
 #include "cup_pong.h"
+#include "display.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void show_welcome_screen();
-void hide_welcome_screen();
+
 
 // these might get moved later; they're just here now as stubs
 struct config {

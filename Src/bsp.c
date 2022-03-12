@@ -11,6 +11,7 @@
 
 
 void QF_onStartup(void) { /* entered with interrupts locked */
+
 }
 
 void QF_onIdle(void) { /* entered with interrupts locked */
@@ -29,14 +30,7 @@ void Q_onAssert(char const Q_ROM *const Q_ROM_VAR file, int line) {
 }
 
 
-void show_welcome_screen() {
-    /* Welcome!
-     * Display initial instructions:
-     *  - make sure cursor is correctly calibrated in iPad settings
-     *  - press blue btn to show menu at any point
-     *  <Press blue button to continue>
-     */
-}
+
 
 // GPIO button handler
 void EXTI15_10_IRQHandler(void) {
@@ -56,7 +50,7 @@ void EXTI15_10_IRQHandler(void) {
     }
 }
 
-void hide_welcome_screen() { return; }
+
 
 void show_menu(struct config *current_cfg) { return; }
 void menu_set_config(struct config *cfg) { return; }
