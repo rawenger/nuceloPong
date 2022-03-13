@@ -21,20 +21,15 @@
 #include "cup_pong.h"
 #include "display.h"
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-
-// these might get moved later; they're just here now as stubs
-struct config {
-    int random_mode;
-};
-
-void show_menu(struct config *current_cfg);
+//void show_menu(struct config *current_cfg);
 void menu_set_config(struct config *cfg);
-void hide_menu();
+//void hide_menu();
 
 // "Use the joystick to move the cursor to the center of the cup. When ready, press the 'c' button to throw."
 void show_cup_select_instructions();

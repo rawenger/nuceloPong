@@ -51,13 +51,16 @@ static void device_init() {
 
 extern void gotoball();
 int main(void) {
-    PongBot_ctor();
     peripheral_init();
     LOG("\r\nInitialized peripherals\r\n");
     // wait for button press before proceeding
 //    while (GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) ;
     LOG("Initialize devices\r\n");
     device_init();
+
+    QF_INT_LOCK();
+    PongBot_ctor();
+
     GPIO_SetPin(LED_GPIO, LED_GPIO_PIN);
 
     QF_INT_UNLOCK();

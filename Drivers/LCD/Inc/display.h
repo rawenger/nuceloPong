@@ -39,6 +39,11 @@ void Display_Init();
 void show_welcome_screen();
 void hide_welcome_screen();
 
+void show_menu();
+void hide_menu();
+void menu_idle();
+void menu_select();
+
 #ifdef __cplusplus
 }
 #endif

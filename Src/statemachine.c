@@ -42,7 +42,8 @@ int octave = 0; // most recently selected octave
 //static int freeze_spectro = 1;
 
 static struct config cfg = {
-        .random_mode = 0 // whether the cups are placed randomly or not
+        .random_mode = 0, // whether the cups are placed randomly or not
+        .mouse_mode = 0, // act as a regular mouse
 };
 
 /**********************************************************************/
@@ -154,7 +155,7 @@ QState PongBot_menu(PongBot_HSM *me) {
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             LOG("PongBot_menu: ENTRY_SIG\r\n");
-            show_menu(&cfg);
+            show_menu();
             return Q_HANDLED();
         }
 
@@ -166,6 +167,7 @@ QState PongBot_menu(PongBot_HSM *me) {
 
         case BTN_CLICK: {
             LOG("PongBot_menu: BTN_CLICK\r\n");
+            menu_select();
             return Q_HANDLED();
         }
 
@@ -174,6 +176,11 @@ QState PongBot_menu(PongBot_HSM *me) {
             if (cfg.random_mode)
                 return Q_TRAN(&PongBot_selectCup);
             return Q_TRAN(&PongBot_play);
+        }
+
+        case IDLE: {
+            menu_idle();
+            return Q_HANDLED();
         }
 
         // maybe also add cases here for quit/resume? this might not be necessary idk yet

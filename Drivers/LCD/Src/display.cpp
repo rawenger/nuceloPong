@@ -103,9 +103,9 @@ void show_menu() {
     // only want to join these in one direction
     restart->set_upper(options);
 
-
     main_menu->set_first(resume);
     main_menu->show();
+
 }
 
 void hide_menu() {
@@ -113,8 +113,27 @@ void hide_menu() {
     delete main_menu;
 }
 
+#define MENU_INPUT_DELAY        100
+#define MENU_INPUT_SENSITIVITY  5
 void menu_idle() {
+    int x, y;
+    x = nc->get_stick_x();//MENU_INPUT_DELAY);
+    y = nc->get_stick_y();//MENU_INPUT_DELAY);
+    uint16_t abs_x, abs_y;
+    abs_x = __builtin_abs(x);
+    abs_y = __builtin_abs(y);
+    if (abs_y >= abs_x && abs_y > MENU_INPUT_SENSITIVITY) {
+        // move vertical
+        main_menu->move_cursor((y > 0) ? menu::UP : menu::DOWN);
+    } else if (abs_x > MENU_INPUT_SENSITIVITY) {
+        // move horizontal
+        main_menu->move_cursor((x > 0) ? menu::RIGHT : menu::LEFT);
+    }
+    SysTick_Delay(100);
+}
 
+void menu_select() {
+    main_menu->select();
 }
 
 #ifdef __cplusplus

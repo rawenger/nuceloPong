@@ -52,9 +52,9 @@ void EXTI15_10_IRQHandler(void) {
 
 
 
-void show_menu(struct config *current_cfg) { return; }
+//void show_menu(struct config *current_cfg) { return; }
 void menu_set_config(struct config *cfg) { return; }
-void hide_menu() { return; }
+//void hide_menu() { return; }
 
 void show_cup_select_instructions() { return; }
 void hide_cup_select_instructions() { return; }

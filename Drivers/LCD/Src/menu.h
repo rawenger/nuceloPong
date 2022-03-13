@@ -24,6 +24,8 @@ public:
     };
     struct menu_item;
 
+    static constexpr Direction get_opposite(Direction dir) { return static_cast<Direction>(dir ^ 0b01); }
+
 private:
     typedef const menu_item* item_link;
     typedef menu_item* _menuitem;

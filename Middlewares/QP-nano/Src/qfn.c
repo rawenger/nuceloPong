@@ -70,7 +70,7 @@ void QActive_post(QActive *me, QSignal sig)
         QK_schedule_();                 /* check for synchronous preemption */
 #endif
     }
-    //QF_INT_UNLOCK();	//NOTE: THIS INTERRUPT ENABLING FUNCTION CAN CAUSE PROBLEMS
+    QF_INT_UNLOCK();	//NOTE: THIS INTERRUPT ENABLING FUNCTION CAN CAUSE PROBLEMS
 }
 /*..........................................................................*/
 #if (Q_PARAM_SIZE != 0)
@@ -87,7 +87,7 @@ void QActive_postISR(QActive *me, QSignal sig)
     QF_ISR_KEY_TYPE key;
     QF_ISR_LOCK(key);
 #else
-    QF_INT_LOCK();	//NOTE: THIS INTERRUPT DISABLING FUNCTION CAN CAUSE PROBLEMS
+//    QF_INT_LOCK();	//NOTE: THIS INTERRUPT DISABLING FUNCTION CAN CAUSE PROBLEMS
 #endif
 #endif
     /* insert event into the ring buffer (FIFO) */
@@ -107,7 +107,7 @@ void QActive_postISR(QActive *me, QSignal sig)
     #ifdef QF_ISR_KEY_TYPE
     QF_ISR_UNLOCK(key);
 #else
-    //QF_INT_UNLOCK();	//NOTE: THIS INTERRUPT ENABLING FUNCTION CAN CAUSE PROBLEMS
+//    QF_INT_UNLOCK();	//NOTE: THIS INTERRUPT ENABLING FUNCTION CAN CAUSE PROBLEMS
 #endif
 #endif
 }
