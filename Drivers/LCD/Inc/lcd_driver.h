@@ -27,15 +27,19 @@ struct current_font {
     uint8_t numchars;
 };
 
-// defined in ../Src/fonts.cpp
+
 #ifdef __cplusplus
-extern constexpr uint8_t SmallFont[];
-extern constexpr uint8_t BigFont[];
+}
+#include "fonts.cpp"
+#define SmallFont       _SmallFont
+#define BigFont         _BigFont
+extern "C" {
 #else
-extern const uint8_t SmallFont[];
-extern const uint8_t BigFont[];
+extern const uint8_t *__SmallFont;
+extern const uint8_t *__BigFont;
+#define SmallFont       __SmallFont
+#define BigFont         __BigFont
 #endif
-//extern uint8_t SevenSegNumFont[];
 
 void LCD_Write_COM(uint8_t VL);
 
