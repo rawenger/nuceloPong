@@ -113,23 +113,35 @@ void hide_menu() {
     delete main_menu;
 }
 
-#define MENU_INPUT_DELAY        100
-#define MENU_INPUT_SENSITIVITY  5
+#define MENU_INPUT_HOLD_DELAY           500
+#define MENU_INPUT_SENSITIVITY          5
+static bool on_status = false;
+static uint32_t last_change;
 void menu_idle() {
     int x, y;
-    x = nc->get_stick_x();//MENU_INPUT_DELAY);
-    y = nc->get_stick_y();//MENU_INPUT_DELAY);
+    x = nc->get_stick_x();
+    y = nc->get_stick_y();
     uint16_t abs_x, abs_y;
     abs_x = __builtin_abs(x);
     abs_y = __builtin_abs(y);
-    if (abs_y >= abs_x && abs_y > MENU_INPUT_SENSITIVITY) {
-        // move vertical
-        main_menu->move_cursor((y > 0) ? menu::UP : menu::DOWN);
-    } else if (abs_x > MENU_INPUT_SENSITIVITY) {
-        // move horizontal
-        main_menu->move_cursor((x > 0) ? menu::RIGHT : menu::LEFT);
+
+    if (abs_y > MENU_INPUT_SENSITIVITY || abs_x > MENU_INPUT_SENSITIVITY) {
+
+        if (!on_status || SysTick_GetClk() - last_change > MENU_INPUT_HOLD_DELAY) {
+
+            if (abs_y >= abs_x)     // move vertical
+                main_menu->move_cursor((y > 0) ? menu::UP : menu::DOWN);
+            else    // move horizontal
+                main_menu->move_cursor((x > 0) ? menu::RIGHT : menu::LEFT);
+
+            last_change = SysTick_GetClk();
+            on_status = true;
+        }
+
+    } else {
+        on_status = false;
     }
-    SysTick_Delay(100);
+
 }
 
 void menu_select() {
