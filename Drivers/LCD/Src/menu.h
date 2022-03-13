@@ -7,6 +7,7 @@
 #define NUCLEOPONG_MENU_H
 
 #include <string>
+#include <array>
 
 #include "nunchuk_controller.h"
 #include "util.h"

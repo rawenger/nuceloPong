@@ -7,11 +7,6 @@
 
 void menu::init()
 {
-//    auto resume = std::make_shared<menu_item>("Resume");
-//    auto options = std::make_shared<menu_item>("Options");
-//    auto quit = std::make_shared<menu_item>("Quit");
-//    auto restart = std::make_shared<menu_item>("Restart");
-
     title_pos.x = (DISP_X_SIZE - title.size() * MENU_TITLE_FONT[0]) / 2;
     title_pos.y = MENU_TITLE_Y;
 
