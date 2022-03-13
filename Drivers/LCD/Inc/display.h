@@ -39,10 +39,15 @@ void Display_Init();
 void show_welcome_screen();
 void hide_welcome_screen();
 
-void show_menu();
+void show_menu(int active_game);
 void hide_menu();
 void menu_idle();
 void menu_select();
+
+void show_options();
+
+void show_mouse_instructions();
+void hide_mouse_instructions();
 
 #ifdef __cplusplus
 }

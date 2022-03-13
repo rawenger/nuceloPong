@@ -23,7 +23,6 @@ void menu::show() const {
     MENU_TITLE_COLOR;
     LCD_setFont(MENU_TITLE_FONT);
     LCD_print(title.c_str(), title_pos.x, title_pos.y);
-
     selection->highlight();
 
     MENU_UNSELECTED_COLOR;
