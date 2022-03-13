@@ -43,7 +43,7 @@ extern "C" {
 
 #ifdef DEBUG_LOGGING
 #include <stdio.h>
-#define LOG(...)               { printf(__VA_ARGS__); fflush(NULL); }
+#define LOG(...)                { printf(__VA_ARGS__); fflush(NULL); }
 #else
 #define LOG(...)
 #endif
