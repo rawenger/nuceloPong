@@ -10,6 +10,7 @@
 mouse::report_type mouse::report{0, 0, 0, 0};
 
 void mouse::reset()  {
+    //TODO: figure out why uncommenting these causes compiler errors
 //    mouse_x = mouse_y = 0;
 
     report = {0, -127, 127, 0};
