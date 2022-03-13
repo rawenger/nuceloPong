@@ -3,9 +3,14 @@
  * This file is provided AS-IS with no warranty.
  */
 
+#include "menu.h"
 #include "display.h"
 #include "systick.h"
 #include "lcd_driver.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern struct current_font cfont;
 
@@ -55,3 +60,35 @@ void show_welcome_screen() {
 void hide_welcome_screen() {
     LCD_clrScr();
 }
+
+void show_menu() {
+    menu main_menu("Main Menu");
+    main_menu.show();
+    while (true) {
+        printf("enter direction\r\n");
+        fflush(NULL);
+        char dir;
+        scanf("%c", &dir);
+        fflush(NULL);
+        switch (dir) {
+            case 'w':
+                main_menu.move_cursor(menu::UP);
+                break;
+            case 'a':
+                main_menu.move_cursor(menu::LEFT);
+                break;
+            case 's':
+                main_menu.move_cursor(menu::DOWN);
+                break;
+            case 'd':
+                main_menu.move_cursor(menu::RIGHT);
+                break;
+            default:
+                printf("error\r\n");
+        }
+    }
+}
+
+#ifdef __cplusplus
+}
+#endif

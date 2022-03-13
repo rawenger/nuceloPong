@@ -11,6 +11,8 @@
 #include "gpio.h"
 #include "systick.h"
 
+#define swap(type, i, j)        {type t = i; i = j; j = t;}
+
 // Global variables
 static int fch; // Foreground color upper byte
 static int fcl; // Foreground color lower byte

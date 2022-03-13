@@ -314,10 +314,13 @@ inline constexpr uint8_t _BigFont[3044] {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  // ~
 };
 
+// check if the file is being included or compiled (hacky, yikes)
+#ifndef SmallFont
 extern "C" {
     const uint8_t *__SmallFont = _SmallFont;
     const uint8_t *__BigFont = _BigFont;
 }
+#endif
 
 // SevenSegNumFont.c
 // Font Size	: 32x50

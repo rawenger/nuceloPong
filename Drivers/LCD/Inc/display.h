@@ -24,6 +24,16 @@
 extern "C" {
 #endif
 
+struct config {
+    int random_mode;
+    int mouse_mode;
+};
+
+struct point {
+    uint16_t x;
+    uint16_t y;
+};
+
 void Display_Init();
 
 void show_welcome_screen();

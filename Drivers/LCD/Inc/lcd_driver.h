@@ -9,8 +9,6 @@
 
 #include "stm32l4xx.h"
 
-#define swap(type, i, j)        {type t = i; i = j; j = t;}
-
 #define DISP_X_SIZE             240
 #define DISP_Y_SIZE             320
 #define MAX_BURST               500
@@ -20,7 +18,7 @@ extern "C" {
 #endif
 
 struct current_font {
-    uint8_t *font;
+    const uint8_t *font;
     uint8_t x_size;
     uint8_t y_size;
     uint8_t offset;
@@ -30,9 +28,9 @@ struct current_font {
 
 #ifdef __cplusplus
 }
-#include "fonts.cpp"
 #define SmallFont       _SmallFont
 #define BigFont         _BigFont
+#include "../Src/fonts.cpp"     // no this isn't a typo
 extern "C" {
 #else
 extern const uint8_t *__SmallFont;
