@@ -5,8 +5,10 @@
 
 #include "menu.h"
 #include "display.h"
+#include "nunchuk_controller.h"
 #include "systick.h"
 #include "lcd_driver.h"
+#include "util.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,32 +63,58 @@ void hide_welcome_screen() {
     LCD_clrScr();
 }
 
+void resume_action(void) {
+    LOG("resume action\r\n");
+    return;
+}
+
+void options_action(void) {
+    LOG("options action\r\n");
+    return;
+}
+
+void quit_action(void) {
+    LOG("quit action\r\n");
+    return;
+}
+
+void restart_action(void) {
+    LOG("restart action\r\n");
+    return;
+}
+
+static menu *main_menu;
+
 void show_menu() {
-    menu main_menu("Main Menu");
-    main_menu.show();
-    while (true) {
-        printf("enter direction\r\n");
-        fflush(NULL);
-        char dir;
-        scanf("%c", &dir);
-        fflush(NULL);
-        switch (dir) {
-            case 'w':
-                main_menu.move_cursor(menu::UP);
-                break;
-            case 'a':
-                main_menu.move_cursor(menu::LEFT);
-                break;
-            case 's':
-                main_menu.move_cursor(menu::DOWN);
-                break;
-            case 'd':
-                main_menu.move_cursor(menu::RIGHT);
-                break;
-            default:
-                printf("error\r\n");
-        }
-    }
+    main_menu = new menu("Main Menu");
+
+    auto resume = new menu::menu_item("Resume", 0, MENU_ITEMS_Y);
+    resume->center();
+    auto options = new menu::menu_item("Options", resume);
+    auto quit = new menu::menu_item("Quit", 20, DISP_Y_SIZE - 40 - menu::menu_item::font_dim.y);
+    auto restart = new menu::menu_item("Restart", nullptr, quit);
+
+    resume->assign_action(&resume_action);
+    options->assign_action(&options_action);
+    quit->assign_action(&quit_action);
+    restart->assign_action(&restart_action);
+
+    options->join_below(quit);
+    // only want to join these in one direction
+    restart->set_upper(options);
+
+
+    main_menu->set_first(resume);
+    main_menu->show();
+}
+
+void hide_menu() {
+    main_menu->hide();
+    delete main_menu;
+}
+
+void menu_idle() {
+
 }
 
 #ifdef __cplusplus

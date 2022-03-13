@@ -7,21 +7,10 @@
 
 void menu::init()
 {
-    title_pos.x = (DISP_X_SIZE - title.size() * MENU_TITLE_FONT[0]) / 2;
+    title_pos.x = (DISP_X_SIZE - title.length() * MENU_TITLE_FONT[0]) / 2;
     title_pos.y = MENU_TITLE_Y;
 
-    auto resume = new menu_item("Resume", 0, MENU_ITEMS_Y);
-    resume->center();
-    auto options = new menu_item("Options", resume);
-    constexpr int i = DISP_Y_SIZE - 40 - menu_item::font_dim.y;
-    auto quit = new menu_item("Quit", 20, DISP_Y_SIZE - 40 - menu_item::font_dim.y);
-    auto restart = new menu_item("Restart", nullptr, quit);
-
-    options->join_below(quit);
-    // only want to join these in one direction
-    restart->links[UP] = options;
-
-    selection = first = resume;
+    selection = first;
 }
 
 
@@ -51,6 +40,22 @@ void menu::move_cursor(menu::Direction dir) {
     }
 }
 
+void menu::select() {
+    LOG("Performing action on selected item %s\r\n", selection->display_text.c_str());
+    selection->action();
+}
+
+void menu::hide() const {
+    // erase title
+    COLOR_BLACK;
+    LCD_fillRect(title_pos.x, title_pos.y,
+                 title_pos.x + title.length() * MENU_TITLE_FONT[0],
+                 title_pos.y + MENU_TITLE_FONT[1]);
+
+    // erase items
+    erase_items(first);
+}
+
 void menu::display_items(item_link start) const {
     if (!start)
         return;
@@ -61,18 +66,29 @@ void menu::display_items(item_link start) const {
     display_items(start->links[RIGHT]);
 }
 
+void menu::erase_items(menu::item_link start) const {
+    if (!start)
+        return;
+
+    LCD_fillRect(start->pos.x, start->pos.y,
+                 start->pos.x + start->display_text.length() * menu_item::font_dim.x,
+                 start->pos.y + menu_item::font_dim.y);
+
+    erase_items(start->links[DOWN]);
+    erase_items(start->links[RIGHT]);
+}
 
 menu::menu_item::menu_item(std::string &&name, const _menuitem& up, const _menuitem& left)
         : display_text(name),
           links{up, nullptr, left, nullptr}
 {
-    this->pos.x = (DISP_X_SIZE - display_text.size() * font_dim.x) / 2;
+    this->pos.x = (DISP_X_SIZE - display_text.length() * font_dim.x) / 2;
     if (up) {
         up->links[DOWN] = this;
         this->pos.y = up->pos.y + font_dim.y + MENU_ITEM_SPACING;
     } else if (left) {
         left->links[RIGHT] = this;
-        this->pos.x = DISP_X_SIZE - left->pos.x - font_dim.x * display_text.size();
+        this->pos.x = DISP_X_SIZE - left->pos.x - font_dim.x * display_text.length();
         this->pos.y = left->pos.y;
     }
 }

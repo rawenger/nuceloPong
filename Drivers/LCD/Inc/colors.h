@@ -14,10 +14,8 @@
 
 #include "lcd_driver.h"
 
-#define BG_COLOR 				        setColor(0, 0, 0)
-#define TRIANGLE_COLOR 			        setColor(150, 255, 100)
-#define VOLUME_COLOR 			        setColor(255, 140, 0)
-#define MODE_COLOR 				        { setColorBg(200, 200, 200);	setColor(100, 0, 100); }
+#define COLOR_BLACK                     LCD_setColor(0, 0, 0)
+#define COLOR_WHITE                     LCD_setColor(255, 255, 255)
 
 #define WELCOME_BG_COLOR                LCD_setColor(0, 0, 0)
 #define WELCOME_BOX_COLOR               LCD_setColor(229, 255, 204)     // same as message bgColor
@@ -36,6 +34,6 @@
 #define MENU_SELECTED_COLOR		        { LCD_setColorBg(229, 255, 204); LCD_setColor(0, 0, 0); }
 #define MENU_TITLE_Y         	        (30) /* y-position of menu title (horizontally centered) */
 #define MENU_ITEM_SPACING               (5U) // vertical space (in px) between menu items
-#define MENU_ITEMS_Y         	        (MENU_TITLE_Y + 4 * MENU_ITEM_SPACING)
+#define MENU_ITEMS_Y         	        (MENU_TITLE_Y + MENU_TITLE_FONT[1] + 4 * MENU_ITEM_SPACING)
 
 #endif //NUCLEOPONG_COLORS_H
