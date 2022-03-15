@@ -11,6 +11,8 @@
 #include "gpio.h"
 #include "systick.h"
 
+#define swap(type, i, j)        {type t = i; i = j; j = t;}
+
 // Global variables
 static int fch; // Foreground color upper byte
 static int fcl; // Foreground color lower byte
@@ -216,6 +218,13 @@ void LCD_clrScr(void) {
     LCD_fastFill();
 }
 
+// fill screen with selected color
+void LCD_fillScr(void) {
+    LCD_setXY(0, 0, DISP_X_SIZE, DISP_Y_SIZE);
+    LCD_fastFill();
+}
+
+
 // Remove drawing boundary
 void LCD_clrXY(void) {
     X1 = X2 = Y1 = Y2 = 0;
@@ -282,7 +291,7 @@ void LCD_fillTriangle(uint16_t x, uint16_t y, int w, int h) {
 }
 
 // Select the font used by print() and printChar()
-void LCD_setFont(uint8_t *font) {
+void LCD_setFont(const uint8_t *font) {
     cfont.font = font;
     cfont.x_size = font[0];
     cfont.y_size = font[1];
@@ -320,7 +329,26 @@ void LCD_print(const char *st, uint16_t x, uint16_t y) {
         LCD_printChar(*st++, x + cfont.x_size * i++, y);
 }
 
+void LCD_printLong(const char *st, uint16_t x, uint16_t y) {
+    int i = 0;
+
+    while (*st != '\0') {
+            switch (*st) {
+                case '\n':
+                    y += cfont.y_size;
+                    // fall through to next case to return cursor to line start
+                case '\r':
+                    i = 0;
+                    break;
+                default:
+                    LCD_printChar(*st, x + cfont.x_size * i++, y);
+            }
+            ++st;
+    }
+}
+
 void LCD_fastFill() {
+
     uint32_t size = (X2 - X1) * (Y2 - Y1);
 
     GPIO_SetPin(LCD_DC_GPIO, LCD_DC_PIN);
@@ -350,4 +378,12 @@ void LCD_fastFill() {
     SPI_Send_Data(LCD_SPI, (uint8_t *) buf, remainder);
 
     GPIO_SetPin(LCD_CS_GPIO, LCD_CS_PIN);
+}
+
+uint8_t LCD_getFontX() {
+    return cfont.x_size;
+}
+
+uint8_t LCD_getFontY() {
+    return cfont.y_size;
 }

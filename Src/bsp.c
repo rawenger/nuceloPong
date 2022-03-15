@@ -11,6 +11,7 @@
 
 
 void QF_onStartup(void) { /* entered with interrupts locked */
+
 }
 
 void QF_onIdle(void) { /* entered with interrupts locked */
@@ -29,14 +30,7 @@ void Q_onAssert(char const Q_ROM *const Q_ROM_VAR file, int line) {
 }
 
 
-void show_welcome_screen() {
-    /* Welcome!
-     * Display initial instructions:
-     *  - make sure cursor is correctly calibrated in iPad settings
-     *  - press blue btn to show menu at any point
-     *  <Press blue button to continue>
-     */
-}
+
 
 // GPIO button handler
 void EXTI15_10_IRQHandler(void) {
@@ -45,7 +39,7 @@ void EXTI15_10_IRQHandler(void) {
     if (EXTI->PR1 & EXTI_PR1_PIF13) {
 
         // dispatch signal to state machine after exit from ISR
-//        QActive_postISR((QActive *) &nucleoPong, BTN_CLICK);
+        QActive_postISR((QActive *) &nucleoPong, BTN_CLICK);
         // Clear interrupt pending bit
         EXTI->PR1 |= EXTI_PR1_PIF13;
 
@@ -56,11 +50,11 @@ void EXTI15_10_IRQHandler(void) {
     }
 }
 
-void hide_welcome_screen() { return; }
 
-void show_menu(struct config *current_cfg) { return; }
+
+//void show_menu(struct config *current_cfg) { return; }
 void menu_set_config(struct config *cfg) { return; }
-void hide_menu() { return; }
+//void hide_menu() { return; }
 
 void show_cup_select_instructions() { return; }
 void hide_cup_select_instructions() { return; }
@@ -72,6 +66,8 @@ void show_game_animation() { return; }
 void hide_game_animation() { return; }
 void show_finished_screen() { return; }
 void hide_finished_screen() { return; }
+
+void PongBot_reset() { return; }
 //void PongBot_throwBall() { return; }
 
-void behave_as_mouse() { return; }
+//void behave_as_mouse() { return; }
