@@ -10,7 +10,8 @@
 mouse::report_type mouse::report{0, 0, 0, 0};
 
 void mouse::reset()  {
-//    mouse_x = mouse_y = 0;
+//    mouse::mouse_x = mouse::mouse_y = 0;
+    // TODO: figure out why this^ causes linker error
 
     report = {0, -127, 127, 0};
 
