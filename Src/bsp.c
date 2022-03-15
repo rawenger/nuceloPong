@@ -66,6 +66,8 @@ void show_game_animation() { return; }
 void hide_game_animation() { return; }
 void show_finished_screen() { return; }
 void hide_finished_screen() { return; }
+
+void PongBot_reset() { return; }
 //void PongBot_throwBall() { return; }
 
 //void behave_as_mouse() { return; }

@@ -43,7 +43,7 @@ static int active_game = 0; // whether to show start option in the menu (i.e: if
 
 static struct config cfg = {
         .random_mode = 0, // whether the cups are placed randomly or not
-        .mouse_mode = 0, // act as a regular mouse
+        .mouse_tracking_speed = 0, // act as a regular mouse
 };
 
 /**********************************************************************/
@@ -78,9 +78,9 @@ QState PongBot_on(PongBot_HSM *me) {
             return Q_TRAN(&PongBot_menu);
         }
 
-        case IDLE:
+        case IDLE: {
             return Q_HANDLED();
-
+        }
     }
 
     return Q_SUPER(&QHsm_top);
@@ -109,12 +109,19 @@ QState PongBot_play(PongBot_HSM *me) {
         }
 
         case IDLE: {
+
             PongBot_throwBall();
+
+            if (!prompt_for_success())
+                PongBot_didMiss();
+
+            return Q_HANDLED();
         }
 
         case FINISHED: {
             active_game = 0;
             show_finished_screen();
+            return Q_HANDLED();
         }
 
     }
@@ -163,6 +170,7 @@ QState PongBot_menu(PongBot_HSM *me) {
 
         case Q_EXIT_SIG: {
             hide_menu();
+            hide_options();
             return Q_HANDLED();
         }
 
@@ -181,14 +189,16 @@ QState PongBot_menu(PongBot_HSM *me) {
             if (cfg.random_mode)
                 return Q_TRAN(&PongBot_selectCup);
             return Q_TRAN(&PongBot_play);
-            // etc
         }
 
         case OPTIONS: {
-            show_options();
+//            show_options(&cfg);
+            return Q_HANDLED();
         }
 
         case RESTART: {
+            PongBot_reset();
+            return Q_TRAN(&PongBot_play);
 
         }
 
@@ -207,6 +217,7 @@ static QState PongBot_mouse(PongBot_HSM *me) {
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
             LOG("mouse_entry\r\n");
+            // TODO: set config (tracking speed, etc)
             show_mouse_instructions();
             return Q_HANDLED();
         }

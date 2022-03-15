@@ -26,7 +26,7 @@ extern "C" {
 
 struct config {
     int random_mode;
-    int mouse_mode;
+    int mouse_tracking_speed;
 };
 
 struct point {
@@ -39,12 +39,18 @@ void Display_Init();
 void show_welcome_screen();
 void hide_welcome_screen();
 
+//void set_active()
+
 void show_menu(int active_game);
 void hide_menu();
 void menu_idle();
 void menu_select();
 
-void show_options();
+void show_options(struct config *cfg);
+void hide_options();
+
+// displays a prompt asking the user if the ball made it into a cup or not
+int prompt_for_success();
 
 void show_mouse_instructions();
 void hide_mouse_instructions();

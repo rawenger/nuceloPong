@@ -42,10 +42,19 @@ extern "C" {
 #endif
 
 #ifdef DEBUG_LOGGING
+
 #include <stdio.h>
+
 #define LOG(...)                { printf(__VA_ARGS__); fflush(NULL); }
+#ifdef __cplusplus
+}
+#include <iostream>
+#define CPP_LOG(OSTREAM)         { std::cout << OSTREAM << "\r\n"; std::cout.flush(); }
+extern "C" {
+#endif
 #else
 #define LOG(...)
+#define CPP_LOG(OSTREAM)
 #endif
 
 #ifdef __cplusplus
