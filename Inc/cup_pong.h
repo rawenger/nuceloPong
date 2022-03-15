@@ -30,7 +30,7 @@ void PongBot_Init();
 
 int PongBot_throwBall();
 
-int PongBot_didMiss();
+void PongBot_didMiss();
 
 int PongBot_getCup();
 

@@ -47,12 +47,12 @@ void PongBot_Init() {
 }
 
 int PongBot_throwBall() {
-    return pb->throw_ball();
+    return static_cast<int>(pb->throw_ball());
     SysTick_Delay(THROW_DELAY);
 }
 
-int PongBot_didMiss() {
-    return static_cast<int>(pb->did_miss());
+void PongBot_didMiss() {
+    pb->did_miss();
 }
 
 int PongBot_getCup() {

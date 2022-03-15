@@ -290,7 +290,7 @@ int prompt_for_success() {
     }
 
     for (int i = 0; i < len; i++)
-        LCD_printChar(' ', i * cfont.x_size, 0);
+        LCD_printChar(' ', i * SmallFont[0], 0);
 
     return ret;
 }
