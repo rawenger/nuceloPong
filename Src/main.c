@@ -96,16 +96,16 @@ int main(void) {
 //        USBD_HID_SendReport(&hUsbDeviceFS, m, 4);
 //        ++clicks;
 //        SysTick_Delay(8);
-//        if (!GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) {
-//            printf("Enter number of trials: ");
-//            int trials;
-//            fflush(NULL);
-//            scanf("%d", &trials);
-//            fflush(NULL);
-//            sample_xy(trials);
-////            gotoball();
-//        }
-        Mouse_behaveAsMouse();
+        if (!GPIO_ReadPin(BTN_GPIO, BTN_GPIO_PIN)) {
+            printf("Enter number of trials: ");
+            int trials;
+            fflush(NULL);
+            scanf("%d", &trials);
+            fflush(NULL);
+            sample_xy(trials);
+//            gotoball();
+        }
+//        Mouse_behaveAsMouse();
     }
 #pragma clang diagnostic pop
 //    QF_INT_UNLOCK();
