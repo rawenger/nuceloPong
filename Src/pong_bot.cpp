@@ -152,6 +152,7 @@ void pong_bot::throw_xy(int x_pwr, int y_pwr) {
 //           FULL_THROWS, y_pwr, y_1_3, y_4, x_pwr, x_1_3, x_4);
 //    fflush(NULL);
 
+    mouse::release();
     mouse::find_ball();
 //    move_mouse(1, 0, 0);
     mouse::y = y_1_3;
