@@ -273,8 +273,10 @@ void hide_options() {
 }
 
 int prompt_for_success() {
+    constexpr const char *prompt_msg = "did you make it? (c/z)";
+    constexpr size_t len = __builtin_strlen(prompt_msg);
 
-    LCD_print("did you make it? (c/z)", 0, 0);
+    LCD_print(prompt_msg, 0, 0);
 
     bool ret;
     while (true) {
@@ -287,7 +289,9 @@ int prompt_for_success() {
         }
     }
 
-    LCD_print(std::string(" ", sizeof "did you make it? (c/z)").c_str(), 0, 0);
+    for (int i = 0; i < len; i++)
+        LCD_printChar(' ', i * cfont.x_size, 0);
+
     return ret;
 }
 

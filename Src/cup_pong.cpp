@@ -46,8 +46,9 @@ void PongBot_Init() {
     pb = new pong_bot();
 }
 
-void PongBot_throwBall() {
-    pb->throw_ball();
+int PongBot_throwBall() {
+    return pb->throw_ball();
+    SysTick_Delay(THROW_DELAY);
 }
 
 int PongBot_didMiss() {

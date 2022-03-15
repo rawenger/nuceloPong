@@ -37,6 +37,7 @@ static QState PongBot_on(PongBot_HSM *me);
 static QState (*prev_mode)(PongBot_HSM *);
 
 static int active_game = 0; // whether to show start option in the menu (i.e: if this is the initial run)
+static int turn = 1;
 
 //static int spectrogram_idx = 0; // time position of spectrogram
 //static int freeze_spectro = 1;
@@ -110,10 +111,13 @@ QState PongBot_play(PongBot_HSM *me) {
 
         case IDLE: {
 
-            PongBot_throwBall();
-
-            if (!prompt_for_success())
-                PongBot_didMiss();
+            if (active_game && turn) {
+                turn = PongBot_throwBall();
+                if (!prompt_for_success())
+                    PongBot_didMiss();
+            } else if (!active_game && Nunchuk_readCButton()) {
+                active_game = 1;
+            }
 
             return Q_HANDLED();
         }

@@ -76,11 +76,12 @@ void mouse::calibrate_sensitivity() {
 
 pong_bot *pb;
 
-pong_bot::pong_bot(bool rand) : random_mode(rand), cup(0), misses(0) {}
+pong_bot::pong_bot(bool rand) : random_mode(rand), cup(0) {}
 
-void pong_bot::throw_ball() {
-    if (misses == 2)
-        return;
+bool pong_bot::throw_ball() {
+    // reset missed state from previous turn
+    if (throw_1 && missed)
+        missed = false;
 
     const auto y_1_3 = static_cast<int8_t>(cups[cup].y / FULL_THROWS);
     const auto y_4 = static_cast<int8_t>(cups[cup].y % FULL_THROWS);
@@ -126,20 +127,26 @@ void pong_bot::throw_ball() {
 
     SysTick_Delay(100);
 
+    throw_1 = !throw_1;
+
+    return !throw_1 && missed;
+
 }
 
 bool pong_bot::did_miss() {
     if (cup)
         --cup;
 
-    if (misses < 2) {
-        ++misses;
-    } else if (misses == 2) {
-        misses = 0;
-        return false;
-    }
+    missed = true;
 
-    return true;
+//    if (throws < 2) {
+//        ++throws;
+//    } else if (throws == 2) {
+//        throws = 0;
+//        return false;
+//    }
+
+
 }
 
 void pong_bot::throw_xy(int x_pwr, int y_pwr) {

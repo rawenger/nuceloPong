@@ -8,6 +8,8 @@
 
 #include <stdint.h>
 
+#define THROW_DELAY         3000U // time between ball throws
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -26,33 +28,11 @@ void Mouse_getTrackedCoords(int *x, int *y);
 
 void PongBot_Init();
 
-void PongBot_throwBall();
+int PongBot_throwBall();
 
 int PongBot_didMiss();
 
 int PongBot_getCup();
-
-//void launch_128();
-
-//void cup0_1__cup_0_2();
-//void cup1_1();
-
-//void cup0_3();
-
-/******* Reverse-Engineering Functions *******/
-
-/** The main idea behind this process is to simply throw the ball with a given mouse power while screen recording,
- * then go through and select the position each ball landed at from the recording. This data can
- * then be put through a regression to determine a mathematical model for the throws.
- */
-
-// run the sampling routine a specified number of times with x=0
-//void sample_y(int samples);
-
-// run the sampling routine a specified number of times
-void sample_xy(int samples);
-
-//void test(int y);
 
 #ifdef __cplusplus
 }

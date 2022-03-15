@@ -134,7 +134,8 @@ private:
 
     bool random_mode;
     int cup;
-    int misses;
+    bool throw_1{true};
+    bool missed{false};
     static constexpr array<coord_type , 10> cups{
             coord_type {CUP0_X, CUP0_Y},
             coord_type {CUP1_X, CUP1_Y},
@@ -153,7 +154,7 @@ public:
     /**
      * @brief Throw ball at the next target cup
      */
-    void throw_ball();
+    bool throw_ball();
 
     /**
      * @brief Called when the bot misses a shot to tell it to retry the same cup
