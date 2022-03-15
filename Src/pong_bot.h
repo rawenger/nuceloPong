@@ -153,14 +153,14 @@ public:
 
     /**
      * @brief Throw ball at the next target cup
+     * @return `true` if it's still the bot's turn, otherwise `false`
      */
     bool throw_ball();
 
     /**
      * @brief Called when the bot misses a shot to tell it to retry the same cup
-     * @return `true` if it's still the bot's turn, otherwise `false`
      */
-    bool did_miss();
+    void did_miss();
 
     /**
      * @brief Throws ball with given x & y power

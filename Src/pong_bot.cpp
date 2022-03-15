@@ -133,20 +133,11 @@ bool pong_bot::throw_ball() {
 
 }
 
-bool pong_bot::did_miss() {
+void pong_bot::did_miss() {
     if (cup)
         --cup;
 
     missed = true;
-
-//    if (throws < 2) {
-//        ++throws;
-//    } else if (throws == 2) {
-//        throws = 0;
-//        return false;
-//    }
-
-
 }
 
 void pong_bot::throw_xy(int x_pwr, int y_pwr) {
