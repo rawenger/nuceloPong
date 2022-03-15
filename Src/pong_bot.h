@@ -42,15 +42,15 @@ using std::array;
 #define CUP3_X                (0)
 #define CUP3_Y                (-215)
 #define CUP4_X                (0)
-#define CUP4_Y                (75)      // unknown
-#define CUP5_X                (5345)    // unknown
-#define CUP5_Y                (435)     // unknown
+#define CUP4_Y                (-180)      // approximate
+#define CUP5_X                (-15)    // approximate
+#define CUP5_Y                (-210)     // approximate
 #define CUP6_X                (-1 * CUP5_X)
 #define CUP6_Y                (CUP5_Y)
 #define CUP7_X                (0)
-#define CUP7_Y                (64)      // unknown
-#define CUP8_X                (535)     // unknown
-#define CUP8_Y                (536)     // unknown
+#define CUP7_Y                (-190)      // approximate
+#define CUP8_X                (-10)     // approximate
+#define CUP8_Y                (-205)     // approximate
 #define CUP9_X                (-1 * CUP8_X)
 #define CUP9_Y                (CUP8_Y)
 
