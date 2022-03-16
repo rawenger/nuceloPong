@@ -77,8 +77,6 @@ void mouse::calibrate_sensitivity() {
 
 pong_bot *pb;
 
-pong_bot::pong_bot(bool rand) : random_mode(rand), cup(0) {}
-
 bool pong_bot::throw_ball() {
 
     CPP_LOG("throwing at cup " << cup << ", throw_1: " << throw_1 << ", missed: " << missed);
@@ -197,8 +195,9 @@ void pong_bot::throw_xy(int x_pwr, int y_pwr) {
     SysTick_Delay(100);
 }
 
-void pong_bot::reset() {
-    cup = 0;
+void pong_bot::reset(int starting_cup, bool rand) {
+    cup = starting_cup;
+    random_mode = rand;
     throw_1 = true;
     missed = false;
 }

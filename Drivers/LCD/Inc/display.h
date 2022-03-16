@@ -27,6 +27,7 @@ extern "C" {
 struct config {
     int random_mode;
     int mouse_tracking_speed;
+    int starting_cup;
 };
 
 struct point {

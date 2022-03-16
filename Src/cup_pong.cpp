@@ -60,8 +60,8 @@ int PongBot_getCup() {
     return pb->get_cup();
 }
 
-void PongBot_reset() {
-    pb->reset();
+void PongBot_reset(config *cfg) {
+    pb->reset(cfg->starting_cup, cfg->random_mode);
 }
 
 int PongBot_gameOver() {

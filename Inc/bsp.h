@@ -48,6 +48,9 @@ void behave_as_mouse();
 void prompt_turn();
 void hide_prompt_turn();
 
+// temporary options configuration since no time to get GUI menu working
+void temp_options(struct config *cfg);
+
 #ifdef __cplusplus
 }
 #endif

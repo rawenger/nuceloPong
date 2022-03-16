@@ -150,7 +150,10 @@ private:
             coord_type {CUP9_X, CUP9_Y}
     };
 public:
-    explicit pong_bot(bool rand=false);
+    explicit pong_bot(int starting_cup=0, bool rand=false) :
+            cup(starting_cup),
+            random_mode(rand)
+            {}
 
     /**
      * @brief Throw ball at the next target cup
@@ -163,7 +166,7 @@ public:
      */
     void did_miss();
 
-    bool game_over() { return cup > 9; }
+    [[nodiscard]] bool game_over() const { return cup > 9; }
 
     /**
      * @brief Throws ball with given x & y power
@@ -177,7 +180,7 @@ public:
      */
     [[nodiscard]] inline int get_cup() const { return cup; }
 
-    void reset();
+    void reset(int starting_cup=0, bool rand=false);
 };
 
 extern pong_bot *pb;

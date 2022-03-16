@@ -79,6 +79,55 @@ void hide_prompt_turn() {
     LCD_fillRect(20, 20, 20 + SmallFont[0] * sizeof TURN_PROMPT, 20 + 2*SmallFont[1]);
 }
 
+
+void temp_options(struct config *cfg) {
+    struct config temp_cfg = *cfg;
+
+    printf("-----------------OPTIONS-------------\r\n");
+    printf("  (0)    Toggle random mode (%s)\r\n", (cfg->random_mode) ? "on" : "off");
+    printf("  (1)    Set mouse sensitivity [BETA]\r\n");
+    printf("  (2)    Set starting cup (%d)\r\n", cfg->starting_cup);
+    printf("  (q)    Quit\r\n");
+    printf("-------------------------------------\r\n");
+    fflush(NULL);
+    char opt[4];
+    scanf("%3s", opt);
+    fflush(NULL);
+
+    for (char *c = opt; *c != '\0'; c++) {
+        switch (*c) {
+            case '0': {
+                temp_cfg.random_mode = !cfg->random_mode;
+                break;
+            }
+            case '1': {
+                int sens;
+                printf("Enter tracking speed value (1-9)\r\n");
+                scanf("%d", &sens);
+                fflush(NULL);
+                temp_cfg.mouse_tracking_speed = sens;
+                break;
+            }
+            case '2': {
+                int cup;
+                printf("Enter starting cup (0-9)\r\n");
+                scanf("%d", &cup);
+                fflush(NULL);
+                temp_cfg.starting_cup = cup;
+                break;
+            }
+            case 'q': {
+                printf("[Changes aborted]\r\n");
+                return;
+            }
+        }
+    }
+
+    *cfg = temp_cfg;
+
+    printf("[Config saved]\r\n");
+}
+
 //void PongBot_throwBall() { return; }
 
 //void behave_as_mouse() { return; }

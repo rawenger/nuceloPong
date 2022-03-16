@@ -43,6 +43,7 @@ static int turn = 1;        // whether it is the bot's turn or not
 static struct config cfg = {
         .random_mode = 0, // whether the cups are placed randomly or not
         .mouse_tracking_speed = 0, // act as a regular mouse
+        .starting_cup = 0,
 };
 
 /**********************************************************************/
@@ -94,7 +95,7 @@ static QState PongBot_play(PongBot_HSM *me) {
         case Q_ENTRY_SIG: {
 
             if (!active_game)
-                PongBot_reset();
+                PongBot_reset(&cfg);
             active_game = 1;
 
             if (cfg.random_mode) {
@@ -225,11 +226,12 @@ static QState PongBot_menu(PongBot_HSM *me) {
 
         case OPTIONS: {
 //            show_options(&cfg);
+            temp_options(&cfg);
             return Q_HANDLED();
         }
 
         case RESTART: {
-            PongBot_reset();
+            PongBot_reset(&cfg);
             return Q_TRAN(&PongBot_play);
 
         }

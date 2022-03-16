@@ -34,7 +34,7 @@ void PongBot_didMiss();
 
 int PongBot_getCup();
 
-void PongBot_reset();
+void PongBot_reset(config *cfg);
 
 int PongBot_gameOver();
 

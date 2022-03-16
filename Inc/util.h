@@ -7,7 +7,7 @@
 #ifndef NUCLEOPONG_UTIL_H
 #define NUCLEOPONG_UTIL_H
 
-#define DEBUG_LOGGING
+//#define DEBUG_LOGGING
 
 
 #define _CONCAT(_x, _y)                 _x##_y
