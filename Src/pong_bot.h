@@ -136,6 +136,7 @@ private:
     int cup;
     bool throw_1{true};
     bool missed{false};
+
     static constexpr array<coord_type , 10> cups{
             coord_type {CUP0_X, CUP0_Y},
             coord_type {CUP1_X, CUP1_Y},
@@ -162,6 +163,8 @@ public:
      */
     void did_miss();
 
+    bool game_over() { return cup > 9; }
+
     /**
      * @brief Throws ball with given x & y power
      * @param x_pwr
@@ -173,6 +176,8 @@ public:
      * @return Next cup to target (0-9)
      */
     [[nodiscard]] inline int get_cup() const { return cup; }
+
+    void reset();
 };
 
 extern pong_bot *pb;

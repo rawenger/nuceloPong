@@ -3,6 +3,7 @@
  * This file is provided AS-IS with no warranty.
  */
 
+#include <util.h>
 #include "pong_bot.h"
 #include "nunchuk_controller.h"
 
@@ -79,9 +80,17 @@ pong_bot *pb;
 pong_bot::pong_bot(bool rand) : random_mode(rand), cup(0) {}
 
 bool pong_bot::throw_ball() {
-    // reset missed state from previous turn
-    if (throw_1 && missed)
+
+    CPP_LOG("throwing at cup " << cup << ", throw_1: " << throw_1 << ", missed: " << missed);
+
+    if (cup > 9) {
+        return false;
+    }
+
+    if (throw_1 && missed) {
         missed = false;
+        return false;
+    }
 
     const auto y_1_3 = static_cast<int8_t>(cups[cup].y / FULL_THROWS);
     const auto y_4 = static_cast<int8_t>(cups[cup].y % FULL_THROWS);
@@ -127,9 +136,10 @@ bool pong_bot::throw_ball() {
 
     SysTick_Delay(100);
 
+
     throw_1 = !throw_1;
 
-    return !throw_1 && missed;
+    return true;
 
 }
 
@@ -185,4 +195,10 @@ void pong_bot::throw_xy(int x_pwr, int y_pwr) {
     ++cup;
 
     SysTick_Delay(100);
+}
+
+void pong_bot::reset() {
+    cup = 0;
+    throw_1 = true;
+    missed = false;
 }

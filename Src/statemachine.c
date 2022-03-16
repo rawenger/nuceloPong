@@ -29,6 +29,7 @@ static QState PongBot_initial(PongBot_HSM *me);
 static QState PongBot_on(PongBot_HSM *me);
     static QState PongBot_play(PongBot_HSM *me);
         static QState PongBot_selectCup(PongBot_HSM *me);
+    static QState PongBot_finished(PongBot_HSM *me);
     static QState PongBot_menu(PongBot_HSM *me);
     static QState PongBot_mouse(PongBot_HSM *me);
 
@@ -37,10 +38,7 @@ static QState PongBot_on(PongBot_HSM *me);
 static QState (*prev_mode)(PongBot_HSM *);
 
 static int active_game = 0; // whether to show start option in the menu (i.e: if this is the initial run)
-static int turn = 1;
-
-//static int spectrogram_idx = 0; // time position of spectrogram
-//static int freeze_spectro = 1;
+static int turn = 1;        // whether it is the bot's turn or not
 
 static struct config cfg = {
         .random_mode = 0, // whether the cups are placed randomly or not
@@ -56,12 +54,12 @@ void PongBot_ctor(void) {
 }
 
 
-QState PongBot_initial(PongBot_HSM *me) {
+static QState PongBot_initial(PongBot_HSM *me) {
     LOG_SIGNAL();
     return Q_TRAN(&PongBot_on);
 }
 
-QState PongBot_on(PongBot_HSM *me) {
+static QState PongBot_on(PongBot_HSM *me) {
     LOG_SIGNAL();
 
     switch (Q_SIG(me)) {
@@ -88,18 +86,24 @@ QState PongBot_on(PongBot_HSM *me) {
 }
 
 
-QState PongBot_play(PongBot_HSM *me) {
+static QState PongBot_play(PongBot_HSM *me) {
 
     LOG_SIGNAL();
 
     switch (Q_SIG(me)) {
         case Q_ENTRY_SIG: {
+
+            if (!active_game)
+                PongBot_reset();
             active_game = 1;
+
             if (cfg.random_mode) {
                 reset_cursor();
                 return Q_TRAN(&PongBot_selectCup);
             }
+
             show_game_animation();
+
             return Q_HANDLED();
         }
 
@@ -112,27 +116,32 @@ QState PongBot_play(PongBot_HSM *me) {
         case IDLE: {
 
             if (active_game && turn) {
+
                 turn = PongBot_throwBall();
-                if (!prompt_for_success())
+
+                // blocks, queueing calls to show main menu
+                if (turn && !prompt_for_success())
                     PongBot_didMiss();
-            } else if (!active_game && Nunchuk_readCButton()) {
-                active_game = 1;
+                else if (PongBot_gameOver())
+                    return Q_TRAN(&PongBot_finished);
+
+                if (!turn) {
+                    // doesn't trigger when resuming from main menu
+                    prompt_turn();
+                }
+
+            } else if (!turn && Nunchuk_readCButton()) {
+                hide_prompt_turn();
+                turn = 1;
             }
 
             return Q_HANDLED();
         }
-
-        case FINISHED: {
-            active_game = 0;
-            show_finished_screen();
-            return Q_HANDLED();
-        }
-
     }
     return Q_SUPER(&PongBot_on);
 }
 
-QState PongBot_selectCup(PongBot_HSM *me) {
+static QState PongBot_selectCup(PongBot_HSM *me) {
 
     LOG_SIGNAL();
 
@@ -153,7 +162,6 @@ QState PongBot_selectCup(PongBot_HSM *me) {
         }
 
         case C_BTN: {
-            //TODO: refactor to something like "perform next action" or something so the class tracks timing internally
             PongBot_throwBall();
             return Q_HANDLED();
         }
@@ -162,7 +170,27 @@ QState PongBot_selectCup(PongBot_HSM *me) {
     return Q_SUPER(&PongBot_play);
 }
 
-QState PongBot_menu(PongBot_HSM *me) {
+static QState PongBot_finished(PongBot_HSM *me) {
+
+    LOG_SIGNAL();
+
+    switch (Q_SIG(me)) {
+        case Q_ENTRY_SIG: {
+            active_game = 0;
+            show_finished_screen();
+            return Q_HANDLED();
+        }
+
+        case Q_EXIT_SIG: {
+            hide_finished_screen();
+            return Q_HANDLED();
+        }
+    }
+
+    return Q_SUPER(&PongBot_on);
+}
+
+static QState PongBot_menu(PongBot_HSM *me) {
 
     LOG_SIGNAL();
 

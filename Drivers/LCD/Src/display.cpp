@@ -272,10 +272,12 @@ void hide_options() {
     options_menu = nullptr;
 }
 
+
 int prompt_for_success() {
     constexpr const char *prompt_msg = "did you make it? (c/z)";
-    constexpr size_t len = __builtin_strlen(prompt_msg);
 
+    LCD_setColorBg(0, 0, 0);
+    COLOR_WHITE;
     LCD_print(prompt_msg, 0, 0);
 
     bool ret;
@@ -288,9 +290,11 @@ int prompt_for_success() {
             break;
         }
     }
+    //        "did you make it? (c/z)"
+    LCD_print("                      ", 0, 0);
 
-    for (int i = 0; i < len; i++)
-        LCD_printChar(' ', i * SmallFont[0], 0);
+    // debounce
+    SysTick_Delay(200);
 
     return ret;
 }

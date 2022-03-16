@@ -34,6 +34,10 @@ void PongBot_didMiss();
 
 int PongBot_getCup();
 
+void PongBot_reset();
+
+int PongBot_gameOver();
+
 #ifdef __cplusplus
 }
 #endif

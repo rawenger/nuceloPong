@@ -64,10 +64,21 @@ void track_cursor() { return; } // dispatches C_BTN signal once the button is pr
 
 void show_game_animation() { return; }
 void hide_game_animation() { return; }
-void show_finished_screen() { return; }
-void hide_finished_screen() { return; }
+void show_finished_screen() { COLOR_WHITE; LCD_print("finished screen!", 20, 100); }
+void hide_finished_screen() { LCD_clrScr(); }
 
-void PongBot_reset() { return; }
+
+#define TURN_PROMPT             "press <c> when it is your\nturn"
+void prompt_turn() {
+    LCD_setColorBg(0, 0, 0);
+    COLOR_WHITE;
+    LCD_printLong(TURN_PROMPT, 20, 20);
+}
+void hide_prompt_turn() {
+    COLOR_BLACK;
+    LCD_fillRect(20, 20, 20 + SmallFont[0] * sizeof TURN_PROMPT, 20 + 2*SmallFont[1]);
+}
+
 //void PongBot_throwBall() { return; }
 
 //void behave_as_mouse() { return; }

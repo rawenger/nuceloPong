@@ -45,7 +45,8 @@ void hide_finished_screen();
 
 void behave_as_mouse();
 
-void PongBot_reset();
+void prompt_turn();
+void hide_prompt_turn();
 
 #ifdef __cplusplus
 }

@@ -48,7 +48,8 @@ void PongBot_Init() {
 
 int PongBot_throwBall() {
     return static_cast<int>(pb->throw_ball());
-    SysTick_Delay(THROW_DELAY);
+//    SysTick_Delay(THROW_DELAY);
+//    return res;
 }
 
 void PongBot_didMiss() {
@@ -57,6 +58,14 @@ void PongBot_didMiss() {
 
 int PongBot_getCup() {
     return pb->get_cup();
+}
+
+void PongBot_reset() {
+    pb->reset();
+}
+
+int PongBot_gameOver() {
+    return static_cast<int>(pb->game_over());
 }
 
 #ifdef __cplusplus
