@@ -75,7 +75,6 @@ private:
     static constexpr auto &x = report[1];
     static constexpr auto &y = report[2];
     static constexpr auto &wheel = report[3];
-//    static constexpr auto get_report = report.data();
 
     static int mouse_x;
     static int mouse_y;
@@ -106,10 +105,6 @@ private:
     }
 
 public:
-//    static constexpr inline void set_buttons(int8_t new_buttons) { buttons = new_buttons; }
-//    static constexpr inline void set_x(int8_t new_x) { x = new_x; }
-//    static constexpr inline void set_y(int8_t new_y) { y = new_y; }
-//    static constexpr inline void set_wheel(int8_t new_wheel) { wheel = new_wheel; }
     static inline void get_tracked(int &tracked_x, int &tracked_y) {tracked_x = mouse_x; tracked_y = mouse_y; }
 
     static void move(int8_t click, int8_t dx, int8_t dy);
