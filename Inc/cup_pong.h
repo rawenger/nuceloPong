@@ -17,6 +17,8 @@ extern "C" {
 // adjusts the cursor sensitivity in iPad settings to a consistent value
 void Mouse_calibrateSensitivity();
 
+void Mouse_setTrackingSpeed(int8_t speed);
+
 // move the mouse cursor and track its position
 void Mouse_trackCursor();
 
@@ -34,7 +36,7 @@ void PongBot_didMiss();
 
 int PongBot_getCup();
 
-void PongBot_reset(config *cfg);
+void PongBot_reset(struct config *cfg);
 
 int PongBot_gameOver();
 

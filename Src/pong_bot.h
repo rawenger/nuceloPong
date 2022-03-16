@@ -79,6 +79,7 @@ private:
 
     static int mouse_x;
     static int mouse_y;
+    static int8_t tracking_speed;
 
     static void reset();
     static void find_ball();
@@ -115,8 +116,8 @@ public:
     static void behave_as_mouse();
     static bool track_cursor(); // returns true if C button is pressed
     static void calibrate_sensitivity();
+    static void set_tracking_speed(int8_t speed);
 };
-
 
 class pong_bot {
 private:

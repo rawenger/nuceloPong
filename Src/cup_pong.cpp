@@ -23,6 +23,10 @@ void Mouse_calibrateSensitivity() {
     mouse::calibrate_sensitivity();
 }
 
+void Mouse_setTrackingSpeed(int8_t speed) {
+    mouse::set_tracking_speed(speed);
+}
+
 // move the mouse cursor and track its position
 void Mouse_trackCursor() {
     if (mouse::track_cursor())
@@ -60,7 +64,7 @@ int PongBot_getCup() {
     return pb->get_cup();
 }
 
-void PongBot_reset(config *cfg) {
+void PongBot_reset(struct config *cfg) {
     pb->reset(cfg->starting_cup, cfg->random_mode);
 }
 

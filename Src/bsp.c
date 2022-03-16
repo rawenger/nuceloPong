@@ -83,12 +83,13 @@ void hide_prompt_turn() {
 void temp_options(struct config *cfg) {
     struct config temp_cfg = *cfg;
 
-    printf("-----------------OPTIONS-------------\r\n");
+    printf("-----------------OPTIONS-----------------\r\n");
+    printf("          (choose 1 or more)\r\n");
     printf("  (0)    Toggle random mode (%s)\r\n", (cfg->random_mode) ? "on" : "off");
-    printf("  (1)    Set mouse sensitivity [BETA]\r\n");
+    printf("  (1)    Set mouse tracking speed (%d)\r\n", cfg->mouse_tracking_speed);
     printf("  (2)    Set starting cup (%d)\r\n", cfg->starting_cup);
     printf("  (q)    Quit\r\n");
-    printf("-------------------------------------\r\n");
+    printf("-----------------------------------------\r\n");
     fflush(NULL);
     char opt[4];
     scanf("%3s", opt);

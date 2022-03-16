@@ -47,8 +47,8 @@ void mouse::move(int8_t click, int8_t dx, int8_t dy) {
 
 void mouse::behave_as_mouse() {
     buttons = static_cast<int8_t>(nc->get_c() | (nc->get_z() << 1U));
-    x = static_cast<int8_t>(nc->get_stick_x());
-    y = static_cast<int8_t>(-1 * nc->get_stick_y());
+    x = static_cast<int8_t>(tracking_speed * nc->get_stick_x());
+    y = static_cast<int8_t>(-tracking_speed * nc->get_stick_y());
     wheel = 0;
     send_report();
 }
@@ -73,6 +73,13 @@ void mouse::calibrate_sensitivity() {
         send_report();
 
     release();
+}
+
+int8_t mouse::tracking_speed = 2;
+
+void mouse::set_tracking_speed(int8_t speed) {
+    if (speed > 0 && speed < 10)
+        tracking_speed = speed;
 }
 
 pong_bot *pb;
