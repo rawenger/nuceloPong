@@ -42,15 +42,15 @@ using std::array;
 #define CUP3_X                (0)
 #define CUP3_Y                (-215)
 #define CUP4_X                (0)
-#define CUP4_Y                (75)      // unknown
-#define CUP5_X                (5345)    // unknown
-#define CUP5_Y                (435)     // unknown
+#define CUP4_Y                (-180)      // approximate
+#define CUP5_X                (-15)    // approximate
+#define CUP5_Y                (-210)     // approximate
 #define CUP6_X                (-1 * CUP5_X)
 #define CUP6_Y                (CUP5_Y)
 #define CUP7_X                (0)
-#define CUP7_Y                (64)      // unknown
-#define CUP8_X                (535)     // unknown
-#define CUP8_Y                (536)     // unknown
+#define CUP7_Y                (-190)      // approximate
+#define CUP8_X                (-10)     // approximate
+#define CUP8_Y                (-205)     // approximate
 #define CUP9_X                (-1 * CUP8_X)
 #define CUP9_Y                (CUP8_Y)
 
@@ -75,10 +75,10 @@ private:
     static constexpr auto &x = report[1];
     static constexpr auto &y = report[2];
     static constexpr auto &wheel = report[3];
-//    static constexpr auto get_report = report.data();
 
     static int mouse_x;
     static int mouse_y;
+    static int8_t tracking_speed;
 
     static void reset();
     static void find_ball();
@@ -105,18 +105,14 @@ private:
     }
 
 public:
-//    static constexpr inline void set_buttons(int8_t new_buttons) { buttons = new_buttons; }
-//    static constexpr inline void set_x(int8_t new_x) { x = new_x; }
-//    static constexpr inline void set_y(int8_t new_y) { y = new_y; }
-//    static constexpr inline void set_wheel(int8_t new_wheel) { wheel = new_wheel; }
     static inline void get_tracked(int &tracked_x, int &tracked_y) {tracked_x = mouse_x; tracked_y = mouse_y; }
 
     static void move(int8_t click, int8_t dx, int8_t dy);
     static void behave_as_mouse();
     static bool track_cursor(); // returns true if C button is pressed
     static void calibrate_sensitivity();
+    static void set_tracking_speed(int8_t speed);
 };
-
 
 class pong_bot {
 private:
@@ -134,7 +130,9 @@ private:
 
     bool random_mode;
     int cup;
-    int misses;
+    bool throw_1{true};
+    bool missed{false};
+
     static constexpr array<coord_type , 10> cups{
             coord_type {CUP0_X, CUP0_Y},
             coord_type {CUP1_X, CUP1_Y},
@@ -148,18 +146,23 @@ private:
             coord_type {CUP9_X, CUP9_Y}
     };
 public:
-    explicit pong_bot(bool rand=false);
+    explicit pong_bot(int starting_cup=0, bool rand=false) :
+            cup(starting_cup),
+            random_mode(rand)
+            {}
 
     /**
      * @brief Throw ball at the next target cup
+     * @return `true` if it's still the bot's turn, otherwise `false`
      */
-    void throw_ball();
+    bool throw_ball();
 
     /**
      * @brief Called when the bot misses a shot to tell it to retry the same cup
-     * @return `true` if it's still the bot's turn, otherwise `false`
      */
-    bool did_miss();
+    void did_miss();
+
+    [[nodiscard]] bool game_over() const { return cup > 9; }
 
     /**
      * @brief Throws ball with given x & y power
@@ -172,6 +175,8 @@ public:
      * @return Next cup to target (0-9)
      */
     [[nodiscard]] inline int get_cup() const { return cup; }
+
+    void reset(int starting_cup=0, bool rand=false);
 };
 
 extern pong_bot *pb;

@@ -3,6 +3,7 @@
  * This file is provided AS-IS with no warranty.
  */
 
+#include <util.h>
 #include "pong_bot.h"
 #include "nunchuk_controller.h"
 
@@ -10,7 +11,8 @@
 mouse::report_type mouse::report{0, 0, 0, 0};
 
 void mouse::reset()  {
-//    mouse_x = mouse_y = 0;
+//    mouse::mouse_x = mouse::mouse_y = 0;
+    // TODO: figure out why this^ causes linker error
 
     report = {0, -127, 127, 0};
 
@@ -45,8 +47,8 @@ void mouse::move(int8_t click, int8_t dx, int8_t dy) {
 
 void mouse::behave_as_mouse() {
     buttons = static_cast<int8_t>(nc->get_c() | (nc->get_z() << 1U));
-    x = static_cast<int8_t>(nc->get_stick_x());
-    y = static_cast<int8_t>(-1 * nc->get_stick_y());
+    x = static_cast<int8_t>(tracking_speed * nc->get_stick_x());
+    y = static_cast<int8_t>(-tracking_speed * nc->get_stick_y());
     wheel = 0;
     send_report();
 }
@@ -73,13 +75,27 @@ void mouse::calibrate_sensitivity() {
     release();
 }
 
+int8_t mouse::tracking_speed = 2;
+
+void mouse::set_tracking_speed(int8_t speed) {
+    if (speed > 0 && speed < 10)
+        tracking_speed = speed;
+}
+
 pong_bot *pb;
 
-pong_bot::pong_bot(bool rand) : random_mode(rand), cup(0), misses(0) {}
+bool pong_bot::throw_ball() {
 
-void pong_bot::throw_ball() {
-    if (misses == 2)
-        return;
+    CPP_LOG("throwing at cup " << cup << ", throw_1: " << throw_1 << ", missed: " << missed);
+
+    if (cup > 9) {
+        return false;
+    }
+
+    if (throw_1 && missed) {
+        missed = false;
+        return false;
+    }
 
     const auto y_1_3 = static_cast<int8_t>(cups[cup].y / FULL_THROWS);
     const auto y_4 = static_cast<int8_t>(cups[cup].y % FULL_THROWS);
@@ -125,20 +141,18 @@ void pong_bot::throw_ball() {
 
     SysTick_Delay(100);
 
+
+    throw_1 = !throw_1;
+
+    return true;
+
 }
 
-bool pong_bot::did_miss() {
+void pong_bot::did_miss() {
     if (cup)
         --cup;
 
-    if (misses < 2) {
-        ++misses;
-    } else if (misses == 2) {
-        misses = 0;
-        return false;
-    }
-
-    return true;
+    missed = true;
 }
 
 void pong_bot::throw_xy(int x_pwr, int y_pwr) {
@@ -151,6 +165,7 @@ void pong_bot::throw_xy(int x_pwr, int y_pwr) {
 //           FULL_THROWS, y_pwr, y_1_3, y_4, x_pwr, x_1_3, x_4);
 //    fflush(NULL);
 
+    mouse::release();
     mouse::find_ball();
 //    move_mouse(1, 0, 0);
     mouse::y = y_1_3;
@@ -185,4 +200,11 @@ void pong_bot::throw_xy(int x_pwr, int y_pwr) {
     ++cup;
 
     SysTick_Delay(100);
+}
+
+void pong_bot::reset(int starting_cup, bool rand) {
+    cup = starting_cup;
+    random_mode = rand;
+    throw_1 = true;
+    missed = false;
 }

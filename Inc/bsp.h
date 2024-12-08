@@ -19,22 +19,17 @@
 #include "lcd_driver.h"
 #include "nunchuk.h"
 #include "cup_pong.h"
+#include "display.h"
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void show_welcome_screen();
-void hide_welcome_screen();
 
-// these might get moved later; they're just here now as stubs
-struct config {
-    int random_mode;
-};
-
-void show_menu(struct config *current_cfg);
+//void show_menu(struct config *current_cfg);
 void menu_set_config(struct config *cfg);
-void hide_menu();
+//void hide_menu();
 
 // "Use the joystick to move the cursor to the center of the cup. When ready, press the 'c' button to throw."
 void show_cup_select_instructions();
@@ -47,9 +42,14 @@ void show_game_animation();
 void hide_game_animation();
 void show_finished_screen();
 void hide_finished_screen();
-void PongBot_throwBall();
 
 void behave_as_mouse();
+
+void prompt_turn();
+void hide_prompt_turn();
+
+// temporary options configuration since no time to get GUI menu working
+void temp_options(struct config *cfg);
 
 #ifdef __cplusplus
 }

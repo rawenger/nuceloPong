@@ -9,8 +9,6 @@
 
 #include "stm32l4xx.h"
 
-#define swap(type, i, j)        {type t = i; i = j; j = t;}
-
 #define DISP_X_SIZE             240
 #define DISP_Y_SIZE             320
 #define MAX_BURST               500
@@ -20,17 +18,26 @@ extern "C" {
 #endif
 
 struct current_font {
-    uint8_t *font;
+    const uint8_t *font;
     uint8_t x_size;
     uint8_t y_size;
     uint8_t offset;
     uint8_t numchars;
 };
 
-// defined in ../Src/fonts.c
-extern uint8_t SmallFont[];
-extern uint8_t BigFont[];
-extern uint8_t SevenSegNumFont[];
+
+#ifdef __cplusplus
+}
+#define SmallFont       _SmallFont
+#define BigFont         _BigFont
+#include "../Src/fonts.cpp"     // no this isn't a typo
+extern "C" {
+#else
+extern const uint8_t *__SmallFont;
+extern const uint8_t *__BigFont;
+#define SmallFont       __SmallFont
+#define BigFont         __BigFont
+#endif
 
 void LCD_Write_COM(uint8_t VL);
 
@@ -50,6 +57,8 @@ void LCD_clrXY(void);
 
 void LCD_clrScr(void);
 
+void LCD_fillScr(void);
+
 void LCD_fastFill();
 
 void LCD_drawHLine(uint16_t x, uint16_t y, int l);
@@ -60,11 +69,32 @@ void LCD_fillRect(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 
 void LCD_fillTriangle(uint16_t x, uint16_t y, int w, int h);
 
-void LCD_setFont(uint8_t *font);
+void LCD_setFont(const uint8_t *font);
 
 void LCD_printChar(uint8_t c, uint16_t x, uint16_t y);
 
 void LCD_print(const char *st, uint16_t x, uint16_t y);
+
+/**
+ * LCD_print with support for newlines, carriage returns, and automatic
+ * line breaks
+ * @param st string buffer to print
+ * @param x x position of upper left corner of text
+ * @param y y position of upper left corner of text
+ */
+void LCD_printLong(const char *st, uint16_t x, uint16_t y);
+
+/**
+ * Gets the width of the current font, in px
+ * @return `uint8_t`, x font size
+ */
+uint8_t LCD_getFontX();
+
+/**
+ * Gets the height of the current font, in px
+ * @return `uint8_t`, y font size
+ */
+uint8_t LCD_getFontY();
 
 
 
